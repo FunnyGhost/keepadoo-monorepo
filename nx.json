@@ -1,6 +1,4 @@
 {
-  "npmScope": "keepadoo",
-  "affected": { "defaultBase": "master" },
   "implicitDependencies": {
     "workspace.json": "*",
     "package.json": { "dependencies": "*", "devDependencies": "*" },
@@ -9,6 +7,8 @@
     ".eslintrc.json": "*",
     "nx.json": "*"
   },
+  "affected": { "defaultBase": "master" },
+  "npmScope": "keepadoo",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
@@ -17,6 +17,7 @@
   },
   "projects": {
     "keepamovie": { "tags": [] },
-    "keepamovie-e2e": { "tags": [], "implicitDependencies": ["keepamovie"] }
+    "keepamovie-e2e": { "tags": [], "implicitDependencies": ["keepamovie"] },
+    "functions": { "tags": [] }
   }
 }

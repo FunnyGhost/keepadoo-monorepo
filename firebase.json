@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "keepadoo",
+      "public": "dist/apps/keepamovie",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "source": "/",
+    "predeploy": ["npm run build functions"]
+  }
+}
