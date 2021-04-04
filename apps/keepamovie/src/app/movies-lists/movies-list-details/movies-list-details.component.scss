@@ -1,0 +1,159 @@
+@import '../../../variables';
+
+.container {
+  padding-bottom: 90px;
+  padding-top: 1rem;
+  max-width: 700px;
+  background: white;
+
+  @media (min-width: 768px) {
+    margin: auto;
+    padding: 8px;
+    margin-bottom: 90px;
+    margin-top: 10px;
+    border-radius: 6px;
+  }
+}
+
+.top-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .edit-button,
+  .back-button,
+  .done-button {
+    margin: 14px;
+    margin-bottom: 0;
+    cursor: pointer;
+    font-family: $main-font;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: $color-primary-1;
+    border: none;
+    background: $white;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      width: 20px;
+    }
+
+    span {
+      margin-left: 6px;
+      margin-bottom: -2px;
+    }
+  }
+}
+
+h1 {
+  font-family: $main-font;
+  font-weight: 700;
+  font-size: 1.75rem;
+  text-transform: uppercase;
+  margin: 28px auto;
+  text-align: center;
+  color: $color-primary-1;
+}
+
+.movies {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 17px 75px 17px;
+  justify-content: space-around;
+}
+
+h4 {
+  font-family: $main-font;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  text-transform: uppercase;
+  margin: 28px 10px;
+  text-align: center;
+  color: $color-primary-1;
+}
+
+.helper-section {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 2rem;
+
+  .helper-text {
+    text-align: center;
+    font-family: $secondary-font-light;
+    font-weight: 300;
+    font-style: italic;
+    color: $color-primary;
+    opacity: 0.6;
+    line-height: 1.5rem;
+
+    svg {
+      height: 1.4rem;
+      margin: 3px;
+      margin-bottom: -4px;
+    }
+  }
+}
+
+.delete-area {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .delete-button {
+    width: 100%;
+    margin: 0 70px;
+    padding: 10px 50px;
+    background: $white;
+    font-family: $main-font;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    border: 1px solid $error-light;
+    color: $remove;
+  }
+}
+
+.dialog-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 10px;
+
+  button {
+    margin: 14px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: $main-font;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: $color-primary-1;
+    border: 1px solid $dark;
+    background: $white;
+    box-shadow: none;
+    transition: all 0.2s;
+
+    &:hover {
+      cursor: pointer;
+      color: $white;
+      background-color: $color-primary-1;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+
+  .loading-image {
+    width: 30px;
+    height: 30px;
+  }
+}
