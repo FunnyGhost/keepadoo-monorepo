@@ -38,11 +38,12 @@ const routes: Route[] = [
         loadChildren: () =>
           import('./movies-lists/movies-lists.module').then((m) => m.MoviesListsModule)
       },
+      // Until there is a home page, redirect to  movies lists
       {
         path: '',
         pathMatch: 'full',
         redirectTo: 'movies-lists'
-      },
+      }
     ]
   }
 ];

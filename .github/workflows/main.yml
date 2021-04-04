@@ -6,7 +6,7 @@ name: master
 # events but only for the master branch
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -28,8 +28,6 @@ jobs:
         run: npm ci
       - name: Lint
         run: npm run lint
-      - name: Format
-        run: npm run format:check
       - name: Test
         run: npm run test
       - name: Build
