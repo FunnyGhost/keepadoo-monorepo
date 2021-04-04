@@ -107,20 +107,13 @@
           "options": {
             "outputPath": "dist/apps/functions",
             "main": "apps/functions/src/main.ts",
-            "tsConfig": "apps/functions/tsconfig.app.json",
-            "assets": ["apps/functions/src/assets"]
+            "tsConfig": "apps/functions/tsconfig.app.json"
           },
           "configurations": {
             "production": {
               "optimization": true,
               "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/functions/src/environments/environment.ts",
-                  "with": "apps/functions/src/environments/environment.prod.ts"
-                }
-              ]
+              "inspect": false
             }
           }
         },
