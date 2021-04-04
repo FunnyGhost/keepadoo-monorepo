@@ -26,10 +26,10 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install
         run: npm ci
-      - name: Firebse Functions install
-        run: npm ci --prefix ./functions
       - name: Lint
         run: npm run lint
+      - name: Format
+        run: npm run format:check
       - name: Test
         run: npm run test
       - name: Build
