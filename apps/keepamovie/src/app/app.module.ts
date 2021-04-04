@@ -43,7 +43,7 @@ const routes: Route[] = [
         path: '',
         pathMatch: 'full',
         redirectTo: 'movies-lists'
-      },
+      }
     ]
   }
 ];
