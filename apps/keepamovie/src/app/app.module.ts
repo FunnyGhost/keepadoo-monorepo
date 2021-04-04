@@ -37,7 +37,12 @@ const routes: Route[] = [
         path: 'movies-lists',
         loadChildren: () =>
           import('./movies-lists/movies-lists.module').then((m) => m.MoviesListsModule)
-      }
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'movies-lists'
+      },
     ]
   }
 ];
