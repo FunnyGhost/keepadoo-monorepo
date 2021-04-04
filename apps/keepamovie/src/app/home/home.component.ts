@@ -5,7 +5,7 @@ import { AuthService } from '../state/auth.service';
 @Component({
   selector: 'keepadoo-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
   constructor(private router: Router, private authService: AuthService) {}

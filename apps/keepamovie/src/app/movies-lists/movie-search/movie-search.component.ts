@@ -11,7 +11,7 @@ import { MovieSearchService } from './state/movie-search.service';
 @Component({
   selector: 'keepadoo-movie-search',
   templateUrl: './movie-search.component.html',
-  styleUrls: ['./movie-search.component.scss'],
+  styleUrls: ['./movie-search.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieSearchComponent implements OnInit, OnDestroy {

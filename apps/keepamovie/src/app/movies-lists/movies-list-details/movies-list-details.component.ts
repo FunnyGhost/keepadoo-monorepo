@@ -12,7 +12,7 @@ import { MoviesListsService } from '../state/movies-lists.service';
 @Component({
   selector: 'keepadoo-movies-list-details',
   templateUrl: './movies-list-details.component.html',
-  styleUrls: ['./movies-list-details.component.scss'],
+  styleUrls: ['./movies-list-details.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesListDetailsComponent implements OnInit, OnDestroy {

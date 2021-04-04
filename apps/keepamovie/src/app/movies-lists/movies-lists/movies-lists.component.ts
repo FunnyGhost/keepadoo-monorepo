@@ -6,7 +6,7 @@ import { MoviesListsService } from '../state/movies-lists.service';
 @Component({
   selector: 'keepadoo-movies-lists',
   templateUrl: './movies-lists.component.html',
-  styleUrls: ['./movies-lists.component.scss'],
+  styleUrls: ['./movies-lists.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesListsComponent {

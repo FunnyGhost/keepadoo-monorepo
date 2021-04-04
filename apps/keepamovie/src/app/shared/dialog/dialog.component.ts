@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 @Component({
   selector: 'keepadoo-dialog',
   templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.scss'],
+  styleUrls: ['./dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('dialog', [

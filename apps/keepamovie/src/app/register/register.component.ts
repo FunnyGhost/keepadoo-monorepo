@@ -7,7 +7,7 @@ import { SessionQuery } from '../state/session.query';
 @Component({
   selector: 'keepadoo-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  styleUrls: ['./register.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent implements OnInit {

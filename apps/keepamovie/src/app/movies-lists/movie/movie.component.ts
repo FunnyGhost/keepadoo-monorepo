@@ -4,7 +4,7 @@ import { Movie } from '../movies/state/models/movie';
 @Component({
   selector: 'keepadoo-movie',
   templateUrl: './movie.component.html',
-  styleUrls: ['./movie.component.scss'],
+  styleUrls: ['./movie.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieComponent {
