@@ -7,18 +7,6 @@
   }"
 >
   <button class="delete-button" *ngIf="editMode" (click)="onDelete()">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14.552"
-      height="14.552"
-      viewBox="0 0 14.552 14.552"
-    >
-      <path
-        id="minus-circle-solid"
-        d="M15.276,8a7.276,7.276,0,1,0,7.276,7.276A7.275,7.275,0,0,0,15.276,8ZM11.4,16.45a.353.353,0,0,1-.352-.352V14.455A.353.353,0,0,1,11.4,14.1h7.745a.353.353,0,0,1,.352.352V16.1a.353.353,0,0,1-.352.352Z"
-        transform="translate(-8 -8)"
-      />
-    </svg>
   </button>
   <img src="https://image.tmdb.org/t/p/w154/{{ movie.poster_path }}" alt="" class="movie-poster" />
 </article>
