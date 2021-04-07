@@ -1,13 +1,15 @@
 <nav class='bg-purple-900 flex flex-row pl-4 py-4 items-center'>
-  <img src='assets/logo.png' class='h-16 object-contain' alt='Keepamovie logo' />
+  <img data-test-name='logo' src='assets/logo.png' class='h-16 object-contain'
+       alt='Keepamovie logo' />
   <span class='ml-4 font-serif text-2xl text-white flex-grow'>Keep-a-Movie</span>
   <button *ngIf='isLoggedIn$ | async'
+          data-test-name='logoutButton'
           class='font-sans text-sm text-white font-bold mx-4 hover:text-gray-200'
           (click)='signOut()'>
     Logout
   </button>
 </nav>
 
-<main class='my-20 mx-auto max-w-6xl w-max relative'>
+<main class='my-20 mx-auto max-w-6xl w-max relative' data-test-name='content'>
   <router-outlet></router-outlet>
 </main>
