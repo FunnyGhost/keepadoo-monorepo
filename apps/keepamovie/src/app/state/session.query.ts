@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Query, toBoolean } from '@datorama/akita';
+import { Query } from '@datorama/akita';
 import { filter, map } from 'rxjs/operators';
 import { SessionState } from './models/session-state';
 import { SessionStore } from './session.store';
 
 @Injectable({ providedIn: 'root' })
 export class SessionQuery extends Query<SessionState> {
-  isLoggedIn$ = this.select(({ user }) => toBoolean(user));
+  isLoggedIn$ = this.select(({ user }) => !!user);
   userId$ = this.select(({ user }) => user && user.userId);
 
   loggedInUser$ = this.select().pipe(
-    filter(({ user }) => toBoolean(user)),
-    map(({ user: { displayName } }) => `${displayName}`)
+    filter(({ user }) => !!user),
+    map(({ user: { displayName } }) => displayName)
   );
 
   constructor(protected store: SessionStore) {
@@ -19,7 +19,7 @@ export class SessionQuery extends Query<SessionState> {
   }
 
   isLoggedIn(): boolean {
-    return toBoolean(this.getValue().user);
+    return !!this.getValue().user;
   }
 
   redirectUrl(): string {

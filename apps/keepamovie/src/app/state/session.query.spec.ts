@@ -5,9 +5,10 @@ import { SessionStore } from './session.store';
 
 describe('SessionQuery', () => {
   let query: SessionQuery;
-  const store = new SessionStore();
+  let store: SessionStore;
 
   beforeEach(() => {
+    store = new SessionStore();
     query = new SessionQuery(store);
   });
 
@@ -16,44 +17,44 @@ describe('SessionQuery', () => {
   });
 
   describe('isLoggedIn$', () => {
-    test('should return true if there is a user', (done) => {
+    test('should return true if there is a user', () => {
       store.update({ user: testUser });
 
-      query.isLoggedIn$.subscribe((data: boolean) => {
-        expect(data).toBe(true);
-        done();
-      });
+      let isLoggedIn = false;
+      query.isLoggedIn$.subscribe((data: boolean) => (isLoggedIn = data));
+
+      expect(isLoggedIn).toEqual(true);
     });
 
-    test('should return false if there is no user', (done) => {
+    test('should return false if there is no user', () => {
       store.update({ user: null });
 
-      query.isLoggedIn$.subscribe((data: boolean) => {
-        expect(data).toBe(false);
-        done();
-      });
+      let isLoggedIn = true;
+      query.isLoggedIn$.subscribe((data: boolean) => (isLoggedIn = data));
+
+      expect(isLoggedIn).toEqual(false);
     });
   });
 
   describe('loggedInUser$', () => {
-    test('should return the logged in user display name', (done) => {
+    test('should return the logged in user display name', () => {
       store.update({ user: testUser });
 
-      query.loggedInUser$.subscribe((data: string) => {
-        expect(data).toBe(`${testUser.displayName}`);
-        done();
-      });
+      let user = '';
+      query.loggedInUser$.subscribe((data: string) => (user = data));
+
+      expect(user).toBe(`${testUser.displayName}`);
     });
   });
 
   describe('userId$', () => {
-    test('should return the logged in userId', (done) => {
+    test('should return the logged in userId', () => {
       store.update({ user: testUser });
 
-      query.userId$.subscribe((data: string) => {
-        expect(data).toBe(`${testUser.userId}`);
-        done();
-      });
+      let userId = '';
+      query.userId$.subscribe((data: string) => (userId = data));
+
+      expect(userId).toBe(`${testUser.userId}`);
     });
   });
 
@@ -62,6 +63,7 @@ describe('SessionQuery', () => {
       store.update({ user: testUser });
 
       const result = query.isLoggedIn();
+
       expect(result).toBe(true);
     });
 
@@ -69,6 +71,7 @@ describe('SessionQuery', () => {
       store.update({ user: null });
 
       const result = query.isLoggedIn();
+
       expect(result).toBe(false);
     });
   });
@@ -79,6 +82,7 @@ describe('SessionQuery', () => {
       store.update({ redirectUrl: inputRedirectUrl });
 
       const result = query.redirectUrl();
+
       expect(result).toBe(inputRedirectUrl);
     });
 
@@ -86,6 +90,7 @@ describe('SessionQuery', () => {
       store.update(createInitialState());
 
       const result = query.redirectUrl();
+
       expect(result).toBe('');
     });
   });
@@ -95,6 +100,7 @@ describe('SessionQuery', () => {
       store.update({ user: testUser });
 
       const result = query.userId();
+
       expect(result).toBe(testUser.userId);
     });
 
