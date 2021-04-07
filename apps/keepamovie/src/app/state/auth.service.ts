@@ -5,19 +5,24 @@ import { map } from 'rxjs/operators';
 import { User } from './models/user';
 import { SessionQuery } from './session.query';
 import { SessionStore } from './session.store';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private authSubscription: Subscription;
+
   constructor(
     private sessionStore: SessionStore,
     private query: SessionQuery,
     private afAuth: AngularFireAuth,
     private router: Router
-  ) {
+  ) {}
+
+  public initialize(): void {
     this.sessionStore.setLoading(true);
-    this.afAuth.authState
+    this.authSubscription = this.afAuth.authState
       .pipe(
         map((firebaseUser) => {
           if (firebaseUser) {
@@ -28,8 +33,6 @@ export class AuthService {
             };
 
             return user;
-          } else {
-            return null;
           }
         })
       )
@@ -47,16 +50,14 @@ export class AuthService {
 
   async signIn(email, password) {
     this.sessionStore.setLoading(true);
-    let response;
 
     try {
-      response = await this.afAuth.signInWithEmailAndPassword(email, password);
+      await this.afAuth.signInWithEmailAndPassword(email, password);
     } catch (error) {
       this.sessionStore.setError(error.message);
     }
 
     this.sessionStore.setLoading(false);
-    return response;
   }
 
   async signUp(email, password) {
@@ -73,5 +74,9 @@ export class AuthService {
   async signOut() {
     await this.afAuth.signOut();
     return this.router.navigate(['/login']);
+  }
+
+  destroy(): void {
+    this.authSubscription.unsubscribe();
   }
 }
