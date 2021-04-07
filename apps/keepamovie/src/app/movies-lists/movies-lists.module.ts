@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from '../shared/shared.module';
+import { DialogModule } from '../shared/dialog/dialog.module';
 import { MovieSearchResultComponent } from './movie-search-result/movie-search-result.component';
 import { MovieSearchComponent } from './movie-search/movie-search.component';
 import { MovieSearchQuery } from './movie-search/state/movie-search.query';
@@ -24,7 +24,7 @@ import { RatingModule } from '../shared/rating/rating.module';
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule,
+    DialogModule,
     MoviesListsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
