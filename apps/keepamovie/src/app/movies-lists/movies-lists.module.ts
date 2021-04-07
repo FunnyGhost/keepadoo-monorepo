@@ -19,9 +19,17 @@ import { MoviesStore } from './movies/state/movies.store';
 import { MoviesListsQuery } from './state/movies-lists.query';
 import { MoviesListsService } from './state/movies-lists.service';
 import { MoviesListsStore } from './state/movies-lists.store';
+import { RatingModule } from '../shared/rating/rating.module';
 
 @NgModule({
-  imports: [CommonModule, SharedModule, MoviesListsRoutingModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    MoviesListsRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RatingModule
+  ],
   declarations: [
     MoviesListsComponent,
     MoviesListComponent,
