@@ -2,26 +2,30 @@
   <form class='flex flex-col w-72 bg-purple-50 p-4 space-y-4 rounded shadow-md'
         [formGroup]='registerForm' (ngSubmit)='onSubmit()'>
     <div *ngIf='(loading$ | async) === true'>
-      <img class='loading-image' src='/assets/spinner.svg' alt='' />
+      <img data-test-name='loading' src='/assets/spinner.svg' alt='' />
     </div>
 
     <img class='self-center h-16 object-contain' src='assets/logo.png' alt='' />
     <h1 class='font-sans text-xl font-bold my-4'>Register</h1>
 
-    <input class='text-sm font-sans shadow border-0 rounded p-3 w-full'
+    <input data-test-name='emailInput' class='text-sm font-sans shadow border-0 rounded p-3 w-full'
            type='email' name='email' placeholder='email' formControlName='email' />
 
-    <input class='text-sm font-sans shadow border-0 rounded p-3 w-full'
+    <input data-test-name='passwordInput'
+           class='text-sm font-sans shadow border-0 rounded p-3 w-full'
            type='password' name='password' placeholder='password' formControlName='password' />
 
     <button
+      data-test-name='submitButton'
       class='text-sm font-sans rounded bg-yellow-400 shadow-md self-start px-4 py-2 hover:bg-yellow-600 transition duration-200'
       type='button' (click)='onSubmit()' [disabled]='!registerForm.valid'>
       Register
     </button>
 
-    <div *ngIf='error$ | async; let error'>{{ error }}</div>
+    <div data-test-name='error' class='text-sm font-sans text-red-500'
+         *ngIf='error$ | async; let error'>{{ error }}</div>
 
-    <a class='text-sm font-sans text-gray-600' routerLink='../login'>...or login here</a>
+    <a class='text-sm font-sans text-gray-600' data-test-name='loginLink' routerLink='../login'>...or
+      login here</a>
   </form>
 </div>
