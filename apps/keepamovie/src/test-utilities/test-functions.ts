@@ -12,3 +12,10 @@ export function getElementForTest(
 ): DebugElement {
   return fixture.debugElement.query(By.css(`[data-test-name=${dataTestName}`));
 }
+
+export function getElementsForTest(
+  fixture: ComponentFixture<any>,
+  dataTestName: string
+): DebugElement[] {
+  return fixture.debugElement.queryAll(By.css(`[data-test-name=${dataTestName}`));
+}
