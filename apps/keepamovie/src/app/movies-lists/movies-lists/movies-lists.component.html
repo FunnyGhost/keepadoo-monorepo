@@ -1,23 +1,46 @@
-<div class="container">
-  <h1>Your lists</h1>
-  <ng-container *ngIf="moviesLists$ | async; let moviesLists">
-    <ng-container *ngIf="isLoading$ | async; else moviesListsTemplate">
-      <div class="loading-container">
-        <img class="loading-image" src="/assets/spinner.svg" alt="" />
-      </div>
-    </ng-container>
-    <ng-template #moviesListsTemplate>
-      <keepadoo-movies-list
-        *ngFor="let moviesList of moviesLists"
-        [moviesList]="moviesList"
-        (listClick)="goToList($event)"
-      ></keepadoo-movies-list>
-      <section *ngIf="moviesLists.length === 0">
-        <span class="helper-text"
-          >Please use the
+<h1 class='font-serif text-2xl text-purple-500 uppercase font-medium mb-8'>Your movie lists</h1>
+
+<div class='grid grid-cols-3 gap-8'>
+  <section class=''>
+    <ng-container *ngIf='moviesLists$ | async; let moviesLists'>
+      <ng-container *ngIf='isLoading$ | async; else moviesListsTemplate'>
+        <div class='loading-container'>
+          <img class='loading-image' src='/assets/spinner.svg' alt='' />
+        </div>
+      </ng-container>
+      <ng-template #moviesListsTemplate>
+        <div class='flex flex-col'>
+          <button
+            (click)='createList()'
+            class='text-xs font-sans rounded bg-yellow-400 shadow-md mx-2 self-start px-4 py-2 hover:bg-yellow-600 transition duration-200'>
+            New list
+          </button>
+
+          <keepadoo-movies-list
+            *ngFor='let moviesList of moviesLists'
+            [moviesList]='moviesList'
+            (listClick)='goToList($event)'
+          ></keepadoo-movies-list>
+        </div>
+        <section *ngIf='moviesLists.length === 0'>
+        <span class='helper-text'
+        >Please use the
           button bellow to create your first list. What fun!</span
         >
-      </section>
-    </ng-template>
-  </ng-container>
+        </section>
+      </ng-template>
+    </ng-container>
+  </section>
+
+  <section class='col-span-2'>
+    <router-outlet>
+    </router-outlet>
+  </section>
+
+  <section
+    class='absolute top-0 left-0 z-10 w-full h-full transition transform origin-bottom duration-500 bg-white'
+    [ngClass]="{'translate-y-0 scale-y-100': createListMode, 'translate-y-full scale-y-0': !createListMode}">
+    <keepadoo-movies-list-create (done)='doneCreatingList()'></keepadoo-movies-list-create>
+  </section>
 </div>
+

@@ -1,50 +1,72 @@
-<div class="container">
-  <section class="top-buttons">
-    <button class="back-button" (click)="goBack()">
-      <span>Back</span>
-    </button>
-    <button class="edit-button" (click)="edit()" *ngIf="(editMode$ | async) === false">
-      <span> Edit </span>
-    </button>
-    <button class="done-button" (click)="done()" *ngIf="(editMode$ | async) === true">
-      <span> Done </span>
-    </button>
-  </section>
-  <ng-container *ngIf="isLoading$ | async; else moviesTemplate">
-    <div class="loading-container">
-      <img class="loading-image" src="/assets/spinner.svg" alt="" />
+<div>
+  <ng-container *ngIf='isLoading$ | async; else moviesTemplate'>
+    <div>
+      <img src='/assets/spinner.svg' alt='' />
     </div>
   </ng-container>
   <ng-template #moviesTemplate>
-    <h1 *ngIf="selectedList$ | async as selectedList">
-      {{ selectedList.name }}
-    </h1>
+    <section class='border-b border-gray-100 flex flex-row mb-4 items-end py-2'>
+      <h1 class='text-2xl text-gray-800 font-bold flex-grow'
+          *ngIf='selectedList$ | async as selectedList'>
+        {{ selectedList.name }}
+      </h1>
 
-    <section class="movies" *ngIf="movies$ | async as movies">
+      <button
+        (click)='enableAddMode()'
+        class='rounded-full h-8 w-8 flex items-center justify-center bg-yellow-400 shadow-md mx-2 hover:bg-yellow-600 transition duration-200'>
+        +
+      </button>
+
+      <button
+        class='text-xs text-gray-600 font-sans bg-gray-100 rounded shadow-md mx-2 py-2 px-4 hover:bg-gray-300 transition duration-200'
+        (click)='edit()' *ngIf='(editMode$ | async) === false'>Edit
+      </button>
+      <button
+        class='text-xs text-gray-600 font-sans bg-gray-100 rounded shadow-md mx-2 py-2 px-4 hover:bg-gray-300 transition duration-200'
+        (click)='done()' *ngIf='(editMode$ | async) === true'>Done
+      </button>
+    </section>
+
+    <section *ngIf='movies$ | async as movies' class='grid grid-cols-2'>
       <keepadoo-movie
-        *ngFor="let movie of movies"
-        [movie]="movie"
-        [editMode]="editMode$ | async"
-        (delete)="deleteMovie($event)"
+        *ngFor='let movie of movies'
+        [movie]='movie'
+        [editMode]='editMode$ | async'
+        (delete)='deleteMovie($event)'
       ></keepadoo-movie>
-      <section *ngIf="movies.length === 0" class="helper-section">
-        <span class="helper-text"
-          >Please use the
+      <section *ngIf='movies.length === 0'>
+        <span
+        >Please use the
           button bellow to add your first movie to this list. Magical!</span
         >
       </section>
     </section>
 
-    <section class="delete-area" *ngIf="(editMode$ | async) === true">
-      <button class="delete-button" (click)="askForDeleteConfirmation()">Delete list</button>
+    <section *ngIf='(editMode$ | async) === true' class='mt-4'>
+      <button (click)='askForDeleteConfirmation()'
+              class='text-xs font-sans rounded bg-red-400 shadow-md py-2 px-8 hover:bg-red-600 transition duration-200'>
+        Delete list
+      </button>
 
-      <keepadoo-dialog [(visible)]="showConfirmationDialog">
-        <h4>Are you sure you want to delete this list?</h4>
-        <section class="dialog-buttons">
-          <button class="button-yes" (click)="deleteList()">Yes</button>
-          <button class="button-no" (click)="cancelListDeletion()">No</button>
+      <keepadoo-dialog [(visible)]='showConfirmationDialog'>
+        <h4 class='font-sans text-lg font-bold'>Are you sure you want to delete this list?</h4>
+        <section class='mt-8'>
+          <button
+            class='text-xs font-sans rounded bg-red-400 shadow-md py-2 px-6 mr-2 hover:bg-red-600 transition duration-200'
+            (click)='deleteList()'>Yes
+          </button>
+          <button
+            class='text-xs font-sans rounded bg-gray-100 shadow-md text-gray-600 py-2 px-6 hover:bg-gray-300 transition duration-200'
+            (click)='cancelListDeletion()'>No
+          </button>
         </section>
       </keepadoo-dialog>
     </section>
   </ng-template>
 </div>
+
+<section
+  class='absolute top-0 left-0 z-10 w-full h-full transition transform origin-bottom duration-500 bg-white'
+  [ngClass]="{'translate-y-0 scale-y-100': addMovieMode, 'translate-y-full scale-y-0': !addMovieMode}">
+  <keepadoo-movie-search (done)='disableAddMode()'></keepadoo-movie-search>
+</section>

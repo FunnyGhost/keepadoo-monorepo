@@ -1,25 +1,22 @@
-<div class="container">
-  <section class="top-buttons">
-    <button class="cancel-button" (click)="goBack()">
-      <span>Back</span>
-    </button>
-  </section>
-  <h1>Search</h1>
-  <section class="search-box">
+<div class='flex flex-col mx-40'>
+  <button class='self-end' (click)='onClose()'>
+    <span>Back</span>
+  </button>
+
+  <section>
     <input
-      type="text"
-      name="movie-name"
-      id="movieName"
-      placeholder="Movie to search for..."
-      [formControl]="movieToSearchFor"
+      class='text-sm font-sans shadow border-0 rounded p-3'
+      type='text'
+      placeholder='Movie to search for...'
+      [formControl]='movieToSearchFor'
     />
   </section>
 
-  <section class="movies">
+  <section class='flex flex-row flex-wrap mt-12'>
     <keepadoo-movie-search-result
-      *ngFor="let movie of movieResults$ | async"
-      [movie]="movie"
-      (movieAddedToList)="addMovie($event)"
+      *ngFor='let movie of movieResults$ | async'
+      [movie]='movie'
+      (movieAddedToList)='addMovie($event)'
     ></keepadoo-movie-search-result>
   </section>
 </div>

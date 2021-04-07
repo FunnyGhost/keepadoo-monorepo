@@ -1,15 +1,15 @@
-<button class="movies-list" (click)="listClicked()">
-  <section class="heading">
-    <span class="list-title">
-      <h4 class="title">{{ moviesList.name }}</h4>
-    </span>
-    <span class="list-size">{{ moviesList.moviesCount }} movies</span>
-  </section>
-  <section class="movies">
+<section class='flex flex-col mb-2 p-2 border-b border-purple-100' (click)='listClicked()'>
+  <div class='flex flex-row items-baseline my-2'>
+    <h4 class='text-base font-bold text-gray-800'>{{ moviesList.name }}</h4>
+    <span class='text-xs font-this text-gray-400 ml-1'>{{ moviesList.moviesCount }}</span>
+    <button class='text-xs text-yellow-400 flex-grow text-right hover:text-yellow-600 transition duration-200' (click)='listClicked()'>See all ></button>
+  </div>
+  <section class='flex flex-row space-x-2'>
     <img
-      *ngFor="let movie of moviesList.recentMovies"
-      src="https://image.tmdb.org/t/p/w92/{{ movie.poster_path }}"
-      alt=""
+      *ngFor='let movie of moviesList.recentMovies'
+      class='h-20 object-contain rounded shadow-lg'
+      src='https://image.tmdb.org/t/p/w92/{{ movie.poster_path }}'
+      alt='Movie poster'
     />
   </section>
-</button>
+</section>

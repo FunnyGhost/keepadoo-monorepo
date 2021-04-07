@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MoviesListsService } from '../state/movies-lists.service';
@@ -14,38 +13,34 @@ import { MovieSearchService } from './state/movie-search.service';
   styleUrls: ['./movie-search.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSearchComponent implements OnInit, OnDestroy {
+export class MovieSearchComponent implements OnInit {
   movieToSearchFor = new FormControl('');
   movieResults$: Observable<MovieSearchResult[]>;
+
+  @Output() done = new EventEmitter<void>();
 
   constructor(
     private movieSearchService: MovieSearchService,
     private movieSearchQuery: MovieSearchQuery,
-    private moviesListsService: MoviesListsService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private moviesListsService: MoviesListsService
   ) {}
 
   ngOnInit() {
     this.movieResults$ = this.movieSearchQuery.selectAll();
 
-    this.movieToSearchFor.valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged())
-      .subscribe((movieName: string) => {
-        this.movieSearchService.searchMovies(movieName);
-      });
+    this.movieToSearchFor.valueChanges.pipe(debounceTime(500)).subscribe((movieName: string) => {
+      this.movieSearchService.searchMovies(movieName);
+    });
   }
 
   addMovie(movie: MovieSearchResult): void {
     this.moviesListsService.addMovieToCurrentList(movie);
-    this.goBack();
+    this.onClose();
   }
 
-  goBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
-  }
-
-  ngOnDestroy(): void {
+  onClose(): void {
+    this.movieToSearchFor.reset('', { emitEvent: false });
     this.movieSearchService.clearSearchResults();
+    this.done.emit();
   }
 }

@@ -22,6 +22,7 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
   editMode$ = this.moviesQuery.select().pipe(map((state) => state.editMode));
 
   showConfirmationDialog: boolean;
+  addMovieMode = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -45,6 +46,14 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
 
   done(): void {
     this.moviesService.disableEditMode();
+  }
+
+  enableAddMode(): void {
+    this.addMovieMode = true;
+  }
+
+  disableAddMode(): void {
+    this.addMovieMode = false;
   }
 
   askForDeleteConfirmation(): void {

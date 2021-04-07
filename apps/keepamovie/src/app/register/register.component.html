@@ -1,26 +1,27 @@
-<div class="container">
-  <form class="register-box" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div class="overlay" *ngIf="(loading$ | async) === true">
-      <img class="loading-image" src="/assets/spinner.svg" alt="" />
-    </div>
-    <div class="logo-container"><img src="assets/logo.png" alt="" /></div>
-    <h1>Register</h1>
-    <div class="input-element">
-      <input type="email" name="email" placeholder="email" formControlName="email" />
-    </div>
-    <div class="input-element">
-      <input type="password" name="password" placeholder="password" formControlName="password" />
+<div class='flex justify-center items-center h-screen'>
+  <form class='flex flex-col w-72 bg-purple-50 p-4 space-y-4 rounded shadow-md'
+        [formGroup]='registerForm' (ngSubmit)='onSubmit()'>
+    <div *ngIf='(loading$ | async) === true'>
+      <img class='loading-image' src='/assets/spinner.svg' alt='' />
     </div>
 
-    <div class="button-container">
-      <button type="button" (click)="onSubmit()" [disabled]="!registerForm.valid">
-        <span class="register-button-text">Register</span>
-      </button>
+    <img class='self-center h-16 object-contain' src='assets/logo.png' alt='' />
+    <h1 class='font-sans text-xl font-bold my-4'>Register</h1>
 
-      <div class="error" *ngIf="error$ | async; let error">{{ error }}</div>
-    </div>
-    <section class="login-area">
-      <a class="login-button" routerLink="../login">...or login here</a>
-    </section>
+    <input class='text-sm font-sans shadow border-0 rounded p-3 w-full'
+           type='email' name='email' placeholder='email' formControlName='email' />
+
+    <input class='text-sm font-sans shadow border-0 rounded p-3 w-full'
+           type='password' name='password' placeholder='password' formControlName='password' />
+
+    <button
+      class='text-sm font-sans rounded bg-yellow-400 shadow-md self-start px-4 py-2 hover:bg-yellow-600 transition duration-200'
+      type='button' (click)='onSubmit()' [disabled]='!registerForm.valid'>
+      Register
+    </button>
+
+    <div *ngIf='error$ | async; let error'>{{ error }}</div>
+
+    <a class='text-sm font-sans text-gray-600' routerLink='../login'>...or login here</a>
   </form>
 </div>

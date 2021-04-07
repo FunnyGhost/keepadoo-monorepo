@@ -13,6 +13,8 @@ export class MoviesListsComponent {
   moviesLists$ = this.moviesListsQuery.selectAll();
   isLoading$ = this.moviesListsQuery.selectLoading();
 
+  createListMode = false;
+
   constructor(
     private moviesListsQuery: MoviesListsQuery,
     private moviesListsService: MoviesListsService,
@@ -21,5 +23,13 @@ export class MoviesListsComponent {
 
   goToList(listId: string): void {
     this.router.navigate([`/home/movies-lists/${listId}`]);
+  }
+
+  createList(): void {
+    this.createListMode = true;
+  }
+
+  doneCreatingList(): void {
+    this.createListMode = false;
   }
 }

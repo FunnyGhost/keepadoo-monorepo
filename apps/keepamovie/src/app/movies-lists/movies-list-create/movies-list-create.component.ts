@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsService } from '../state/movies-lists.service';
@@ -19,12 +18,12 @@ export class MoviesListCreateComponent implements OnInit {
   error$: Observable<string>;
   loading$: Observable<boolean>;
 
+  @Output() done = new EventEmitter<void>();
+
   constructor(
     private formBuilder: FormBuilder,
     private query: MoviesListsQuery,
-    private moviesListService: MoviesListsService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private moviesListService: MoviesListsService
   ) {}
 
   ngOnInit() {
@@ -34,10 +33,10 @@ export class MoviesListCreateComponent implements OnInit {
 
   async onSubmit() {
     await this.moviesListService.add({ name: this.moviesListForm.value.name });
-    this.goBack();
+    this.onClose();
   }
 
-  goBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+  onClose(): void {
+    this.done.next();
   }
 }
