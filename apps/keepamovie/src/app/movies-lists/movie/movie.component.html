@@ -1,16 +1,21 @@
 <article class='bg-gray-100 rounded shadow p-4 mb-4 w-80 relative'>
   <div class='flex'>
     <img src='https://image.tmdb.org/t/p/w154/{{ movie.poster_path }}'
+         data-test-name='moviePoster'
          class='object-contain h-24 shadow-lg rounded'
          alt='{{movie.title}} poster' />
     <div class='flex flex-col justify-between pl-4'>
-      <p class='text-lg font-bold overflow-ellipsis overflow-hidden'>{{movie.title}}</p>
-      <p class='text-xs text-gray-400 font-medium'>{{movie.release_date | date:'YYYY'}}</p>
-      <p class='text-base text-yellow-400 font-medium'>{{movie.vote_average | rating}}</p>
+      <p class='text-lg font-bold overflow-ellipsis overflow-hidden'
+         data-test-name='movieTitle'>{{movie.title}}</p>
+      <p class='text-xs text-gray-400 font-medium'
+         data-test-name='movieReleaseDate'>{{movie.release_date | date:'YYYY'}}</p>
+      <p class='text-base text-yellow-400 font-medium'
+         data-test-name='movieRating'>{{movie.vote_average | rating}}</p>
     </div>
   </div>
   <button
     *ngIf='editMode'
+    data-test-name='deleteButton'
     (click)='onDelete()'
     class='absolute bottom-1 right-1 rounded-full h-8 w-8 flex items-center justify-center bg-red-400 shadow-md mx-2 hover:bg-red-600 transition duration-200'>
     T
