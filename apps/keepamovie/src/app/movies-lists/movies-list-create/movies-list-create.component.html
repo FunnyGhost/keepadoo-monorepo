@@ -1,12 +1,13 @@
 <div class='flex flex-col w-96 mx-auto'>
-  <button class='self-end' (click)='onClose()'>
-    <span>Back</span>
+  <button class='self-end' (click)='onClose()' data-test-name='closeButton'>
+    Back
   </button>
 
   <h4 class='font-sans text-lg font-bold mb-8'>New movies list</h4>
   <form class='mb-4' [formGroup]='moviesListForm'>
     <label for='listName' class='font-sans text-sm text-gray-600 mr-4'>Name:</label>
     <input
+      data-test-name='nameInput'
       class='shadow border-0 rounded p-3 text-sm font-sans'
       type='text'
       id='listName'
@@ -17,6 +18,7 @@
 
   <div>
     <button
+      data-test-name='createButton'
       class='text-xs font-sans rounded bg-yellow-400 shadow-md px-4 py-2 hover:bg-yellow-600 transition duration-200'
       (click)='onSubmit()'
       [disabled]='!moviesListForm.valid'
@@ -26,6 +28,7 @@
       <span class='create-button-text' *ngIf='(loading$ | async) === false'>Create</span>
     </button>
 
-    <div class='error' *ngIf='error$ | async; let error'>{{ error }}</div>
+    <div class='error' data-test-name='error'
+         *ngIf='error$ | async; let error'>{{ error }}</div>
   </div>
 </div>
