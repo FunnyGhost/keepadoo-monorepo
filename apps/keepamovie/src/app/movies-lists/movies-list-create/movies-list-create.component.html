@@ -3,7 +3,7 @@
     Back
   </button>
 
-  <h4 class='font-sans text-lg font-bold mb-8'>New movies list</h4>
+  <h4 class='font-serif text-lg font-bold mb-8'>New movies list</h4>
   <form class='mb-4' [formGroup]='moviesListForm'>
     <label for='listName' class='font-sans text-sm text-gray-600 mr-4'>Name:</label>
     <input
@@ -25,10 +25,10 @@
       [class.loading]='loading$ | async'
     >
       <img *ngIf='loading$ | async' class='loading-image' src='/assets/spinner.svg' alt='' />
-      <span class='create-button-text' *ngIf='(loading$ | async) === false'>Create</span>
+      <span *ngIf='(loading$ | async) === false'>Create</span>
     </button>
 
-    <div class='error' data-test-name='error'
+    <div class='text-sm font-sans text-red-500' data-test-name='error'
          *ngIf='error$ | async; let error'>{{ error }}</div>
   </div>
 </div>
