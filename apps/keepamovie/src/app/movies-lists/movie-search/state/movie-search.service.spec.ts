@@ -22,7 +22,13 @@ describe('MovieSearchService', () => {
     httpTestingController = TestBed.inject(HttpTestingController);
   });
 
+  afterEach(() => {
+    movieSearchService.destroy();
+  });
+
   test('should be created', () => {
+    movieSearchService.initialize();
+
     expect(movieSearchService).toBeDefined();
   });
 
@@ -50,13 +56,14 @@ describe('MovieSearchService', () => {
           ]
         };
 
+        movieSearchService.initialize();
         service.searchMovies(searchText);
 
         const req = httpTestingController.expectOne((request: HttpRequest<any>) => {
           const containsUrl = request.url.includes(environment.tmdbConfig.apiUrl);
           const containsKey = request.params.get('api_key') === environment.tmdbConfig.api_key;
-          const containesSearchQuery = request.params.get('query') === searchText;
-          return containsUrl && containsKey && containesSearchQuery;
+          const containsSearchQuery = request.params.get('query') === searchText;
+          return containsUrl && containsKey && containsSearchQuery;
         });
 
         expect(req.request.method).toEqual('GET');
@@ -91,6 +98,7 @@ describe('MovieSearchService', () => {
           ]
         };
 
+        movieSearchService.initialize();
         service.searchMovies(searchText);
 
         const req = httpTestingController.expectOne((request: HttpRequest<any>) => {
@@ -112,6 +120,7 @@ describe('MovieSearchService', () => {
     });
 
     test('should clear the store when asked to', () => {
+      movieSearchService.initialize();
       movieSearchService.clearSearchResults();
 
       expect(movieSearchStore.set).toHaveBeenCalledWith([]);

@@ -1,11 +1,6 @@
-<article class="search-result-container">
-  <img src="https://image.tmdb.org/t/p/w154/{{ movie.poster_path }}" alt="" class="movie-poster" />
-  <div class="movie-details">
-    <h4>{{ movie.title }}</h4>
-    <div class="year">{{ movie.release_date | date: 'yyyy' }}</div>
-    <section class="buttons">
-      <button class="add-button" (click)="addMovieToList()">Add to list</button>
-    </section>
-    <section class="movie-overview">{{ movie.overview }}</section>
-  </div>
-</article>
+<img src='https://image.tmdb.org/t/p/w154/{{ movie.poster_path }}' alt='{{movie.title}} poster'
+     data-test-name='moviePoster'
+     (click)='addMovieToList()'
+     class='h-40 object-contain rounded shadow-md mr-4 mb-4 transform transition duration-200 hover:shadow-lg hover:-translate-y-2' />
+
+

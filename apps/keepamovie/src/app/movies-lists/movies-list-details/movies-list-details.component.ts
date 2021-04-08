@@ -12,7 +12,6 @@ import { MoviesListsService } from '../state/movies-lists.service';
 @Component({
   selector: 'keepadoo-movies-list-details',
   templateUrl: './movies-list-details.component.html',
-  styleUrls: ['./movies-list-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesListDetailsComponent implements OnInit, OnDestroy {
@@ -22,6 +21,7 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
   editMode$ = this.moviesQuery.select().pipe(map((state) => state.editMode));
 
   showConfirmationDialog: boolean;
+  addMovieMode = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -33,6 +33,7 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.moviesService.initialize();
     this.activatedRoute.paramMap.subscribe((params) => {
       const listId = params.get('id');
       this.moviesListsService.setActive(listId);
@@ -45,6 +46,14 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
 
   done(): void {
     this.moviesService.disableEditMode();
+  }
+
+  enableAddMode(): void {
+    this.addMovieMode = true;
+  }
+
+  disableAddMode(): void {
+    this.addMovieMode = false;
   }
 
   askForDeleteConfirmation(): void {
@@ -73,5 +82,6 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.moviesService.disableEditMode();
+    this.moviesService.destroy();
   }
 }

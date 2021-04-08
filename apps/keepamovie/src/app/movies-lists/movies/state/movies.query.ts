@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { Movie } from './models/movie';
 import { MoviesState, MoviesStore } from './movies.store';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MoviesQuery extends QueryEntity<MoviesState, Movie> {
   constructor(protected store: MoviesStore) {
     super(store);

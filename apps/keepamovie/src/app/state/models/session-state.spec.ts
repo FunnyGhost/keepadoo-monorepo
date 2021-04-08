@@ -18,7 +18,9 @@ describe('SessionState', () => {
   describe('createSession', () => {
     test('should create a session with the given user', () => {
       const inputUser = testUser;
+
       const result: User = createSession(inputUser);
+
       expect(result).toEqual(inputUser);
     });
   });

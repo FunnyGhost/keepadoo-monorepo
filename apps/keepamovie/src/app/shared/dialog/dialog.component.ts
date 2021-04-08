@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 @Component({
   selector: 'keepadoo-dialog',
   templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('dialog', [
@@ -16,6 +15,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 export class DialogComponent {
   @Input() canBeClosed = true;
   @Input() visible: boolean;
+
   @Output() visibleChange = new EventEmitter<boolean>();
 
   close(): void {

@@ -1,41 +1,65 @@
 import { ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { testMovies } from '../../../test-utilities/test-objects';
 import { MovieComponent } from './movie.component';
+import { getElementForTest } from '../../../test-utilities/test-functions';
+import { MockPipe } from 'ng-mocks';
+import { RatingPipe } from '../../shared/rating/rating.pipe';
 
 describe('MovieComponent', () => {
   const movieToUse = testMovies[0];
   let component: MovieComponent;
   let fixture: ComponentFixture<MovieComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({ declarations: [MovieComponent] })
-        .overrideComponent(MovieComponent, {
-          set: { changeDetection: ChangeDetectionStrategy.Default }
-        })
-        .compileComponents();
-    })
-  );
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [MovieComponent, MockPipe(RatingPipe, (value) => String(value))]
+    }).overrideComponent(MovieComponent, {
+      set: { changeDetection: ChangeDetectionStrategy.Default }
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MovieComponent);
     component = fixture.componentInstance;
     component.movie = movieToUse;
-    fixture.detectChanges();
   });
 
   test('should create', () => {
+    fixture.detectChanges();
+
     expect(component).toBeTruthy();
   });
 
   describe('Render', () => {
     test('should show the movie poster', () => {
-      const moviePosters = fixture.debugElement.queryAll(By.css('img.movie-poster'));
+      fixture.detectChanges();
+      const moviePoster = getElementForTest(fixture, 'moviePoster');
 
-      expect(moviePosters.length).toBe(1);
-      expect(moviePosters[0].nativeElement.src).toContain(movieToUse.poster_path);
+      expect(moviePoster.nativeElement.src).toContain(movieToUse.poster_path);
+    });
+
+    test('should show the movie title', () => {
+      fixture.detectChanges();
+      const movieTitle = getElementForTest(fixture, 'movieTitle');
+
+      expect(movieTitle.nativeElement.textContent).toContain(movieToUse.title);
+    });
+
+    test('should show the movie release year', () => {
+      fixture.detectChanges();
+      const movieReleaseDate = getElementForTest(fixture, 'movieReleaseDate');
+
+      expect(movieReleaseDate.nativeElement.textContent).toContain(
+        movieToUse.release_date.getFullYear()
+      );
+    });
+
+    test('should show the movie rating', () => {
+      fixture.detectChanges();
+      const movieRating = getElementForTest(fixture, 'movieRating');
+
+      expect(movieRating.nativeElement.textContent).toContain(movieToUse.vote_average);
     });
   });
 
@@ -46,18 +70,19 @@ describe('MovieComponent', () => {
     });
 
     test('should have a delete button', () => {
-      const deleteButtons = fixture.debugElement.queryAll(By.css('button.delete-button'));
+      const deleteButton = getElementForTest(fixture, 'deleteButton');
 
-      expect(deleteButtons.length).toBe(1);
+      expect(deleteButton).toBeTruthy();
     });
 
     test('should emit the delete event when the delete button is clicked', () => {
-      const deleteButton = fixture.debugElement.query(By.css('button.delete-button'));
-      jest.spyOn(component.delete, 'emit');
+      const deleteButton = getElementForTest(fixture, 'deleteButton');
+      let movieToDelete;
+      component.delete.subscribe((data) => (movieToDelete = data));
 
       deleteButton.triggerEventHandler('click', null);
 
-      expect(component.delete.emit).toHaveBeenCalledWith(component.movie);
+      expect(movieToDelete).toEqual(component.movie);
     });
   });
 
@@ -68,9 +93,9 @@ describe('MovieComponent', () => {
     });
 
     test('should not have a delete button', () => {
-      const deleteButtons = fixture.debugElement.queryAll(By.css('button.delete-button'));
+      const deleteButton = getElementForTest(fixture, 'deleteButton');
 
-      expect(deleteButtons.length).toBe(0);
+      expect(deleteButton).toBeFalsy();
     });
   });
 });

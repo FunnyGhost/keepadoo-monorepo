@@ -1,16 +1,24 @@
 {
   "version": 2,
-  "cli": { "defaultCollection": "@nrwl/angular" },
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
   "defaultProject": "keepamovie",
   "generators": {
     "@nrwl/angular:application": {
-      "style": "scss",
+      "style": "css",
       "linter": "eslint",
       "unitTestRunner": "jest",
       "e2eTestRunner": "cypress"
     },
-    "@nrwl/angular:library": { "style": "scss", "linter": "eslint", "unitTestRunner": "jest" },
-    "@nrwl/angular:component": { "style": "scss" }
+    "@nrwl/angular:library": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "css"
+    }
   },
   "projects": {
     "keepamovie": {
@@ -20,7 +28,7 @@
       "prefix": "keepadoo",
       "targets": {
         "build": {
-          "executor": "@angular-devkit/build-angular:browser",
+          "executor": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist/apps/keepamovie",
             "index": "apps/keepamovie/src/index.html",
@@ -28,9 +36,17 @@
             "polyfills": "apps/keepamovie/src/polyfills.ts",
             "tsConfig": "apps/keepamovie/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/keepamovie/src/favicon.ico", "apps/keepamovie/src/assets"],
-            "styles": ["apps/keepamovie/src/styles.scss"],
-            "scripts": []
+            "assets": [
+              "apps/keepamovie/src/favicon.ico",
+              "apps/keepamovie/src/assets"
+            ],
+            "styles": [
+              "apps/keepamovie/src/styles.css"
+            ],
+            "scripts": [],
+            "customWebpackConfig": {
+              "path": "webpack.config.js"
+            }
           },
           "configurations": {
             "production": {
@@ -48,31 +64,55 @@
               "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
-                { "type": "initial", "maximumWarning": "2mb", "maximumError": "5mb" },
-                { "type": "anyComponentStyle", "maximumWarning": "6kb", "maximumError": "10kb" }
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
               ]
             }
           }
         },
         "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
-          "options": { "browserTarget": "keepamovie:build" },
-          "configurations": { "production": { "browserTarget": "keepamovie:build:production" } }
+          "executor": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "browserTarget": "keepamovie:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "keepamovie:build:production"
+            }
+          }
         },
         "extract-i18n": {
           "executor": "@angular-devkit/build-angular:extract-i18n",
-          "options": { "browserTarget": "keepamovie:build" }
+          "options": {
+            "browserTarget": "keepamovie:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/keepamovie/src/**/*.ts", "apps/keepamovie/src/**/*.html"]
+            "lintFilePatterns": [
+              "apps/keepamovie/src/**/*.ts",
+              "apps/keepamovie/src/**/*.html"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/keepamovie"],
-          "options": { "jestConfig": "apps/keepamovie/jest.config.js", "passWithNoTests": true }
+          "outputs": [
+            "coverage/apps/keepamovie"
+          ],
+          "options": {
+            "jestConfig": "apps/keepamovie/jest.config.js",
+            "passWithNoTests": true
+          }
         }
       }
     },
@@ -88,11 +128,19 @@
             "tsConfig": "apps/keepamovie-e2e/tsconfig.e2e.json",
             "devServerTarget": "keepamovie:serve"
           },
-          "configurations": { "production": { "devServerTarget": "keepamovie:serve:production" } }
+          "configurations": {
+            "production": {
+              "devServerTarget": "keepamovie:serve:production"
+            }
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/keepamovie-e2e/**/*.{js,ts}"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/keepamovie-e2e/**/*.{js,ts}"
+            ]
+          }
         }
       }
     },
@@ -103,7 +151,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/functions",
             "main": "apps/functions/src/main.ts",
@@ -119,16 +169,27 @@
         },
         "serve": {
           "executor": "@nrwl/node:execute",
-          "options": { "buildTarget": "functions:build" }
+          "options": {
+            "buildTarget": "functions:build"
+          }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["apps/functions/**/*.ts"] }
+          "options": {
+            "lintFilePatterns": [
+              "apps/functions/**/*.ts"
+            ]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/functions"],
-          "options": { "jestConfig": "apps/functions/jest.config.js", "passWithNoTests": true }
+          "outputs": [
+            "coverage/apps/functions"
+          ],
+          "options": {
+            "jestConfig": "apps/functions/jest.config.js",
+            "passWithNoTests": true
+          }
         }
       }
     }

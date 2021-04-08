@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { authServiceMock } from '../../test-utilities/test-mocks';
 import { AuthService } from '../state/auth.service';
 import { SessionQuery } from '../state/session.query';
 import { RegisterComponent } from './register.component';
+import { getElementForTest, getElementsForTest } from '../../test-utilities/test-functions';
+import { RouterLinkWithHref } from '@angular/router';
+import { MockComponent } from 'ng-mocks';
 
 const queryMock = {
   error: new BehaviorSubject<string | null>(null),
@@ -20,52 +20,55 @@ const queryMock = {
   }
 };
 
+const authServiceMock: Partial<AuthService> = {
+  signUp: () => new Promise<void>(() => '')
+};
+
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
   let authService: AuthService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ReactiveFormsModule, RouterTestingModule],
-        declarations: [RegisterComponent],
-        providers: [
-          {
-            provide: AuthService,
-            useValue: authServiceMock
-          },
-          {
-            provide: SessionQuery,
-            useValue: queryMock
-          }
-        ]
-      })
-        .overrideComponent(RegisterComponent, {
-          set: { changeDetection: ChangeDetectionStrategy.Default }
-        })
-        .compileComponents();
-    })
-  );
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
+      declarations: [RegisterComponent, MockComponent(RouterLinkWithHref)],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: authServiceMock
+        },
+        {
+          provide: SessionQuery,
+          useValue: queryMock
+        }
+      ]
+    }).overrideComponent(RegisterComponent, {
+      set: { changeDetection: ChangeDetectionStrategy.Default }
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-
     authService = TestBed.inject(AuthService);
   });
 
   test('should create', () => {
+    fixture.detectChanges();
+
     expect(component).toBeTruthy();
   });
 
   test('should register the user', () => {
+    jest.spyOn(authService, 'signUp');
+    fixture.detectChanges();
+
     const emailToUse = 'batman@gotham.dc';
     const passwordToUse = 'HahahHahAHha';
-    const emailInput = fixture.debugElement.query(By.css('input[type=email]'));
-    const passwordInput = fixture.debugElement.query(By.css('input[type=password]'));
-    const registerButton = fixture.debugElement.query(By.css('button'));
+    const emailInput = getElementForTest(fixture, 'emailInput');
+    const passwordInput = getElementForTest(fixture, 'passwordInput');
+    const registerButton = getElementForTest(fixture, 'submitButton');
 
     emailInput.nativeElement.value = emailToUse;
     emailInput.nativeElement.dispatchEvent(new Event('input'));
@@ -77,73 +80,6 @@ describe('RegisterComponent', () => {
     expect(authService.signUp).toHaveBeenCalledWith(emailToUse, passwordToUse);
   });
 
-  describe('email', () => {
-    let errors = {};
-    let email: AbstractControl;
-
-    beforeEach(() => {
-      errors = {};
-      email = component.registerForm.controls['email'];
-    });
-
-    test('should be invalid if empty', () => {
-      expect(email.valid).toBeFalsy();
-
-      errors = email.errors || {};
-
-      expect(errors['required']).toBeTruthy();
-    });
-
-    test('should be invalid if value is not an email', () => {
-      email.setValue('test');
-      errors = email.errors || {};
-
-      expect(errors['required']).toBeFalsy();
-      expect(errors['email']).toBeTruthy();
-    });
-
-    test('should be valid if value is an email', () => {
-      email.setValue('test@example.com');
-      errors = email.errors || {};
-
-      expect(errors['required']).toBeFalsy();
-      expect(errors['email']).toBeFalsy();
-    });
-  });
-
-  describe('password', () => {
-    let errors = {};
-    let password: AbstractControl;
-
-    beforeEach(() => {
-      errors = {};
-      password = component.registerForm.controls['password'];
-    });
-
-    test('should be invalid if empty', () => {
-      expect(password.valid).toBeFalsy();
-
-      errors = password.errors || {};
-      expect(errors['required']).toBeTruthy();
-    });
-
-    test('should be invalid if value is less than 8 characters long', () => {
-      password.setValue('test');
-      errors = password.errors || {};
-
-      expect(errors['required']).toBeFalsy();
-      expect(errors['minlength']).toBeTruthy();
-    });
-
-    test('should be valid if value is an email', () => {
-      password.setValue('some-long-password');
-      errors = password.errors || {};
-
-      expect(errors['required']).toBeFalsy();
-      expect(errors['minlength']).toBeFalsy();
-    });
-  });
-
   describe('RegisterButton', () => {
     test('should be enabled if the form is valid', () => {
       const email = component.registerForm.controls['email'];
@@ -152,7 +88,7 @@ describe('RegisterComponent', () => {
       password.setValue('Hahahahhaahah');
 
       fixture.detectChanges();
-      const registerButton = fixture.debugElement.query(By.css('button'));
+      const registerButton = getElementForTest(fixture, 'submitButton');
 
       expect(registerButton.nativeElement.disabled).toBeFalsy();
     });
@@ -162,7 +98,7 @@ describe('RegisterComponent', () => {
       email.setValue('');
 
       fixture.detectChanges();
-      const registerButton = fixture.debugElement.query(By.css('button'));
+      const registerButton = getElementForTest(fixture, 'submitButton');
 
       expect(registerButton.nativeElement.disabled).toBeTruthy();
     });
@@ -171,8 +107,9 @@ describe('RegisterComponent', () => {
   describe('Error', () => {
     test('should not be visible if there is no error', () => {
       queryMock.error.next(null);
+      fixture.detectChanges();
 
-      const errorElements = fixture.debugElement.queryAll(By.css('.error'));
+      const errorElements = getElementsForTest(fixture, 'error');
 
       expect(errorElements.length).toBe(0);
     });
@@ -182,7 +119,7 @@ describe('RegisterComponent', () => {
       queryMock.error.next(errorToUse);
       fixture.detectChanges();
 
-      const errorElements = fixture.debugElement.queryAll(By.css('.error'));
+      const errorElements = getElementsForTest(fixture, 'error');
 
       expect(errorElements.length).toBe(1);
       expect(errorElements[0].nativeElement.innerHTML).toContain(errorToUse);
@@ -197,7 +134,8 @@ describe('RegisterComponent', () => {
       });
 
       test('should not show the loading overlay', () => {
-        const loadingImage = fixture.debugElement.queryAll(By.css('.overlay'));
+        const loadingImage = getElementsForTest(fixture, 'loading');
+
         expect(loadingImage.length).toBe(0);
       });
     });
@@ -209,16 +147,17 @@ describe('RegisterComponent', () => {
       });
 
       test('should show the loading overlay', () => {
-        const loadingImage = fixture.debugElement.queryAll(By.css('.overlay'));
+        const loadingImage = getElementsForTest(fixture, 'loading');
+
         expect(loadingImage.length).toBe(1);
       });
     });
   });
 
   test('should have a button to go to the login page', () => {
-    const loginButton = fixture.debugElement.query(By.css('.login-button')).nativeElement;
+    const loginLink = getElementForTest(fixture, 'loginLink')
+      .componentInstance as RouterLinkWithHref;
 
-    expect(loginButton.href).toContain('login');
-    expect(loginButton.text).toContain('login');
+    expect(loginLink.routerLink).toContain('login');
   });
 });

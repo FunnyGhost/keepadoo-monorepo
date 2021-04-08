@@ -1,18 +1,15 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../state/auth.service';
+import { SessionQuery } from '../state/session.query';
 
 @Component({
   selector: 'keepadoo-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './home.component.html'
 })
 export class HomeComponent {
-  constructor(private router: Router, private authService: AuthService) {}
+  isLoggedIn$ = this.sessionQuery.isLoggedIn$;
 
-  goToAdd(): void {
-    this.router.navigateByUrl(`${this.router.url}/add`);
-  }
+  constructor(private authService: AuthService, private sessionQuery: SessionQuery) {}
 
   signOut(): void {
     this.authService.signOut();

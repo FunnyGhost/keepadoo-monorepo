@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { combineLatest, from, NEVER, Observable, Subscription } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { combineLatest, from, Observable, of, Subscription } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 import { SessionQuery } from '../../../state/session.query';
 import { MovieSearchResult } from '../../movie-search/state/models/movie-search-results';
 import { MoviesList } from '../../state/models/movies-list';
@@ -10,31 +10,35 @@ import { Movie } from './models/movie';
 import { MoviesStore } from './movies.store';
 import { HotToastService } from '@ngneat/hot-toast';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MoviesService {
   private setupSubscription: Subscription;
 
   constructor(
     private firestoreService: AngularFirestore,
-    sessionQuery: SessionQuery,
-    moviesListsQuery: MoviesListsQuery,
+    private sessionQuery: SessionQuery,
+    private moviesListsQuery: MoviesListsQuery,
     private moviesStore: MoviesStore,
     private notificationService: HotToastService
-  ) {
-    this.setupSubscription = combineLatest([sessionQuery.userId$, moviesListsQuery.selectActive()])
+  ) {}
+
+  initialize(): void {
+    this.setupSubscription = combineLatest([
+      this.sessionQuery.userId$,
+      this.moviesListsQuery.selectActive()
+    ])
       .pipe(
         switchMap(([userId, moviesList]: [string, MoviesList]) => {
+          this.moviesStore.setLoading(true);
           if (!userId || !moviesList) {
-            moviesStore.set([]);
-            return NEVER;
+            return of([]);
           } else {
-            this.moviesStore.setLoading(true);
             return this.getMoviesInList(moviesList.id);
           }
         })
       )
       .subscribe((movies) => {
-        moviesStore.set(movies);
+        this.moviesStore.set(movies);
         this.moviesStore.setLoading(false);
       });
   }
@@ -47,24 +51,26 @@ export class MoviesService {
         (ref) => ref.where('listId', '==', listId)
       )
       .valueChanges({ idField: 'key' })
-      .pipe(take(1)) as Observable<Movie[]>;
+      .pipe(map((data) => (data as unknown) as Movie[]));
   }
 
-  public async addMovieToList(listId: string, movie: MovieSearchResult) {
+  public addMovieToList(listId: string, movie: MovieSearchResult) {
     const addedOn = new Date().toISOString();
-    return this.firestoreService.collection(`movies`).add({ ...movie, listId, added_on: addedOn });
+    return from(
+      this.firestoreService.collection(`movies`).add({ ...movie, listId, added_on: addedOn })
+    );
   }
 
-  public async deleteMovie(movie: Movie) {
+  public deleteMovie(movie: Movie) {
     const movieToDelete = this.firestoreService.collection(`movies`).doc(movie.key);
-    await movieToDelete.delete();
-    this.moviesStore.remove(movie.id);
-    this.notificationService.success('Movie deleted!', {
-      duration: 3000
+    from(movieToDelete.delete()).subscribe(() => {
+      this.notificationService.success('Movie deleted!', {
+        duration: 3000
+      });
     });
   }
 
-  public async deleteMoviesInList(listId: string): Promise<void> {
+  public deleteMoviesInList(listId: string): Observable<void> {
     return this.firestoreService
       .collection(`movies`, (ref) => ref.where('listId', '==', listId))
       .snapshotChanges()
@@ -72,8 +78,7 @@ export class MoviesService {
         take(1),
         switchMap((data) => from(data)),
         switchMap((item) => item.payload.doc.ref.delete())
-      )
-      .toPromise();
+      );
   }
 
   public enableEditMode(): void {

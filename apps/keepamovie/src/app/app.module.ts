@@ -10,7 +10,7 @@ import { CoreModule } from './core/core.module';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { SharedModule } from './shared/shared.module';
+import { DialogModule } from './shared/dialog/dialog.module';
 import { AuthGuard } from './state/auth.guard';
 import { HotToastModule } from '@ngneat/hot-toast';
 
@@ -52,7 +52,7 @@ const routes: Route[] = [
   declarations: [AppComponent, LoginComponent, RegisterComponent, HomeComponent],
   imports: [
     CoreModule,
-    SharedModule,
+    DialogModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,

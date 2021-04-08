@@ -1,6 +1,13 @@
-<div class="dialog" [@dialog] *ngIf="visible">
-  <ng-content></ng-content>
-  <button *ngIf="canBeClosed" class="close-button" aria-label="Close" (click)="close()">X</button>
+<div class='fixed z-10 top-80 mx-auto bg-white w-96 flex flex-col rounded shadow-md p-2' [@dialog]
+     *ngIf='visible'>
+  <button data-test-name='closeButton' *ngIf='canBeClosed' class='self-end' aria-label='Close'
+          (click)='close()'>X
+  </button>
+  <div class='p-4' data-test-name='content'>
+    <ng-content></ng-content>
+  </div>
 </div>
 
-<div *ngIf="visible" class="overlay" (click)="close()"></div>
+<div data-test-name='overlay' *ngIf='visible'
+     class='fixed top-0 left-0 bg-gray-400 w-full h-full opacity-90'
+     (click)='close()'></div>

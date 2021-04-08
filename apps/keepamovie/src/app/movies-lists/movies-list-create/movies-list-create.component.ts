@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsService } from '../state/movies-lists.service';
@@ -8,7 +7,6 @@ import { MoviesListsService } from '../state/movies-lists.service';
 @Component({
   selector: 'keepadoo-movies-list-create',
   templateUrl: './movies-list-create.component.html',
-  styleUrls: ['./movies-list-create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesListCreateComponent implements OnInit {
@@ -19,12 +17,12 @@ export class MoviesListCreateComponent implements OnInit {
   error$: Observable<string>;
   loading$: Observable<boolean>;
 
+  @Output() done = new EventEmitter<void>();
+
   constructor(
     private formBuilder: FormBuilder,
     private query: MoviesListsQuery,
-    private moviesListService: MoviesListsService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private moviesListService: MoviesListsService
   ) {}
 
   ngOnInit() {
@@ -32,12 +30,12 @@ export class MoviesListCreateComponent implements OnInit {
     this.loading$ = this.query.selectLoading();
   }
 
-  async onSubmit() {
-    await this.moviesListService.add({ name: this.moviesListForm.value.name });
-    this.goBack();
+  onSubmit() {
+    this.moviesListService.add({ name: this.moviesListForm.value.name });
+    this.onClose();
   }
 
-  goBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+  onClose(): void {
+    this.done.next();
   }
 }
