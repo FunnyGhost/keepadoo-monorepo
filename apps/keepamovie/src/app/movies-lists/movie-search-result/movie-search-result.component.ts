@@ -4,7 +4,6 @@ import { MovieSearchResult } from '../movie-search/state/models/movie-search-res
 @Component({
   selector: 'keepadoo-movie-search-result',
   templateUrl: './movie-search-result.component.html',
-  styleUrls: ['./movie-search-result.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieSearchResultComponent {
