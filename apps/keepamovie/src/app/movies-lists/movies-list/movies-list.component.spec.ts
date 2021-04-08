@@ -1,27 +1,25 @@
-import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { testMoviesLists } from '../../../test-utilities/test-objects';
 import { Movie } from '../movies/state/models/movie';
 import { MoviesListComponent } from './movies-list.component';
+import { getElementForTest, getElementsForTest } from '../../../test-utilities/test-functions';
 
 describe('MoviesListComponent', () => {
   const listToUse = testMoviesLists[1];
   let component: MoviesListComponent;
   let fixture: ComponentFixture<MoviesListComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [MoviesListComponent]
-      }).compileComponents();
-    })
-  );
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [MoviesListComponent]
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MoviesListComponent);
     component = fixture.componentInstance;
     component.moviesList = listToUse;
+
     fixture.detectChanges();
   });
 
@@ -31,36 +29,34 @@ describe('MoviesListComponent', () => {
 
   describe('Render', () => {
     test('should show the list name', () => {
-      const titleElement = fixture.debugElement.query(By.css('.title'));
+      const titleElement = getElementForTest(fixture, 'listName');
 
       expect(titleElement.nativeElement.innerHTML).toBe(listToUse.name);
     });
 
     test('should show the list size', () => {
-      const sizeElement = fixture.debugElement.query(By.css('.list-size'));
+      const sizeElement = getElementForTest(fixture, 'listCount');
 
       expect(sizeElement.nativeElement.innerHTML).toContain(listToUse.moviesCount);
     });
 
     test('should show the last movies in list', () => {
-      const imgTags = fixture.debugElement
-        .queryAll(By.css('img'))
-        .map((element: DebugElement) => element.nativeElement.outerHTML);
-      expect(imgTags.length).toBe(listToUse.recentMovies.length);
+      const imgTags = getElementsForTest(fixture, 'movieImage');
 
+      expect(imgTags.length).toBe(listToUse.recentMovies.length);
       listToUse.recentMovies.forEach((movie: Movie, index: number) => {
-        expect(imgTags[index]).toContain(movie.poster_path);
+        expect(imgTags[index].nativeElement.src).toContain(movie.poster_path);
       });
     });
   });
 
-  test('should emit when the list is clicked', (done) => {
-    const title = fixture.debugElement.query(By.css('button.movies-list'));
-    component.listClick.subscribe((listId) => {
-      expect(listId).toEqual(listToUse.id);
-      done();
-    });
+  test('should emit when the list is clicked', () => {
+    const selectButton = getElementForTest(fixture, 'selectButton');
+    let selectedList = '';
+    component.listClick.subscribe((listId) => (selectedList = listId));
 
-    title.triggerEventHandler('click', null);
+    selectButton.triggerEventHandler('click', null);
+
+    expect(selectedList).toEqual(listToUse.id);
   });
 });

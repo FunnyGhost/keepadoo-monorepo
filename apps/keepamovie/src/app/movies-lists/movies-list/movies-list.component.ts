@@ -4,7 +4,6 @@ import { MoviesList } from '../state/models/movies-list';
 @Component({
   selector: 'keepadoo-movies-list',
   templateUrl: './movies-list.component.html',
-  styleUrls: ['./movies-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesListComponent {
