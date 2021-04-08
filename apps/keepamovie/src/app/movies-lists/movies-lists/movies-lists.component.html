@@ -1,4 +1,4 @@
-<h1 class='font-serif text-2xl text-purple-500 uppercase font-medium mb-8'>Your movie lists</h1>
+<h1 class='font-serif font-bold text-2xl text-purple-900 uppercase mb-8'>Your movie lists</h1>
 
 <div class='grid grid-cols-3 gap-8'>
   <section class=''>
@@ -39,7 +39,7 @@
   </section>
 
   <section
-    class='absolute top-0 left-0 z-10 w-full h-full transition transform origin-bottom duration-500 bg-white'
+    class='absolute shadow rounded-md top-0 left-0 z-10 w-full h-full transition transform origin-bottom duration-500 bg-white'
     [ngClass]="{'translate-y-0 scale-y-100': createListMode, 'translate-y-full scale-y-0': !createListMode}">
     <keepadoo-movies-list-create (done)='doneCreatingList()'></keepadoo-movies-list-create>
   </section>

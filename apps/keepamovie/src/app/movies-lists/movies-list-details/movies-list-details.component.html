@@ -6,7 +6,7 @@
   </ng-container>
   <ng-template #moviesTemplate>
     <section class='border-b border-gray-100 flex flex-row mb-4 items-end py-2'>
-      <h1 class='text-2xl text-gray-800 font-bold flex-grow'
+      <h1 class='text-2xl text-gray-800 font-bold font-serif flex-grow'
           data-test-name='listName'
           *ngIf='selectedList$ | async as selectedList'>
         {{ selectedList.name }}
@@ -21,7 +21,7 @@
 
       <button
         data-test-name='editModeButton'
-        class='text-xs text-gray-600 font-sans bg-gray-100 rounded shadow-md mx-2 py-2 px-4 hover:bg-gray-300 transition duration-200'
+        class='text-xs text-gray-600 font-sans bg-white rounded shadow-md mx-2 py-2 px-4 hover:bg-gray-300 transition duration-200'
         (click)='edit()' *ngIf='(editMode$ | async) === false'>Edit
       </button>
       <button
@@ -72,7 +72,7 @@
 </div>
 
 <section
-  class='absolute top-0 left-0 z-10 w-full h-full transition transform origin-bottom duration-500 bg-white'
+  class='absolute rounded-md shadow top-0 left-0 z-10 w-full h-full transition transform origin-bottom duration-500 bg-white'
   [ngClass]="{'translate-y-0 scale-y-100': addMovieMode, 'translate-y-full scale-y-0': !addMovieMode}">
   <keepadoo-movie-search (done)='disableAddMode()'></keepadoo-movie-search>
 </section>
