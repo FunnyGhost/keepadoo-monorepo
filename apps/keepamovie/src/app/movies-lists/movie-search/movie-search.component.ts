@@ -1,7 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { MoviesListsService } from '../state/movies-lists.service';
 import { MovieSearchResult } from './state/models/movie-search-results';
 import { MovieSearchQuery } from './state/movie-search.query';
@@ -10,12 +16,11 @@ import { MovieSearchService } from './state/movie-search.service';
 @Component({
   selector: 'keepadoo-movie-search',
   templateUrl: './movie-search.component.html',
-  styleUrls: ['./movie-search.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSearchComponent implements OnInit {
+export class MovieSearchComponent implements OnInit, OnDestroy {
   movieToSearchFor = new FormControl('');
-  movieResults$: Observable<MovieSearchResult[]>;
+  movieResults$ = this.movieSearchQuery.selectAll();
 
   @Output() done = new EventEmitter<void>();
 
@@ -26,8 +31,7 @@ export class MovieSearchComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.movieResults$ = this.movieSearchQuery.selectAll();
-
+    this.movieSearchService.initialize();
     this.movieToSearchFor.valueChanges.pipe(debounceTime(500)).subscribe((movieName: string) => {
       this.movieSearchService.searchMovies(movieName);
     });
@@ -42,5 +46,9 @@ export class MovieSearchComponent implements OnInit {
     this.movieToSearchFor.reset('', { emitEvent: false });
     this.movieSearchService.clearSearchResults();
     this.done.emit();
+  }
+
+  ngOnDestroy(): void {
+    this.movieSearchService.destroy();
   }
 }
