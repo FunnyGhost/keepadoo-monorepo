@@ -10,7 +10,7 @@ import { Movie } from './models/movie';
 import { MoviesStore } from './movies.store';
 import { HotToastService } from '@ngneat/hot-toast';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MoviesService {
   private setupSubscription: Subscription;
 

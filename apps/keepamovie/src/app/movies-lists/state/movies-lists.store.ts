@@ -5,7 +5,7 @@ import { MoviesList } from './models/movies-list';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MoviesListsState extends EntityState<MoviesList> {}
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'movies-lists' })
 export class MoviesListsStore extends EntityStore<MoviesListsState, MoviesList> {
   constructor() {

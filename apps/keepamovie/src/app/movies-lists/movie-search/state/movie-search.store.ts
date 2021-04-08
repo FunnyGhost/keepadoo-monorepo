@@ -5,7 +5,7 @@ import { MovieSearchResult } from './models/movie-search-results';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MovieSearchState extends EntityState<MovieSearchResult> {}
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'movie-search' })
 export class MovieSearchStore extends EntityStore<MovieSearchState, MovieSearchResult> {
   constructor() {

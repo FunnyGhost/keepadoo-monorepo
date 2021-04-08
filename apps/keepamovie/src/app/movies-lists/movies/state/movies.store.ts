@@ -6,7 +6,7 @@ export interface MoviesState extends EntityState<Movie> {
   editMode: boolean;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'movies' })
 export class MoviesStore extends EntityStore<MoviesState, Movie> {
   constructor() {

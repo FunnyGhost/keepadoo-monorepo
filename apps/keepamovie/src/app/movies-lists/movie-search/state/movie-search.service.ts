@@ -6,7 +6,7 @@ import { MovieSearchResult } from './models/movie-search-results';
 import { MovieSearchStore } from './movie-search.store';
 import { Subject, Subscription } from 'rxjs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MovieSearchService {
   searchTerm$ = new Subject<string>();
 
