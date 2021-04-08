@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MockComponent } from 'ng-mocks';
 import { of, ReplaySubject } from 'rxjs';
-import { childComponents } from '../../../test-utilities/test-functions';
-import { routerMock } from '../../../test-utilities/test-mocks';
+import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
 import { testMovies, testMoviesLists } from '../../../test-utilities/test-objects';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { MovieComponent } from '../movie/movie.component';
@@ -16,94 +14,84 @@ import { MoviesListsService } from '../state/movies-lists.service';
 import { MoviesListDetailsComponent } from './movies-list-details.component';
 import { Movie } from '../movies/state/models/movie';
 import { MoviesList } from '../state/models/movies-list';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MovieSearchComponent } from '../movie-search/movie-search.component';
 
 describe('MoviesListDetailsComponent', () => {
   let component: MoviesListDetailsComponent;
   let fixture: ComponentFixture<MoviesListDetailsComponent>;
 
   const listIdToUse = 'dc-movies';
-  const activatedRouteMock = {
-    paramMap: of({
-      get: () => listIdToUse
-    })
-  };
-
-  const moviesListsServiceMock = {
-    setActive: () => {
-      /*dummy function*/
-    },
-    remove: () => {
-      /*dummy function*/
-    }
-  };
-
-  const moviesServiceMock = {
-    enableEditMode: () => {
-      /*dummy function*/
-    },
-    disableEditMode: () => {
-      /*dummy function*/
-    },
-    deleteMovie: () => {
-      /*dummy function*/
-    }
-  };
 
   const allMoviesStream = new ReplaySubject<Movie[]>();
   const editModeStream = new ReplaySubject<{ editMode: boolean }>();
   const loadingStream = new ReplaySubject<boolean>();
-  const moviesQueryMock = {
-    select: () => editModeStream.asObservable(),
-    selectAll: () => allMoviesStream.asObservable(),
-    selectLoading: () => loadingStream.asObservable()
-  };
-
   const activeListStream = new ReplaySubject<MoviesList>();
-  const moviesListsQueryMock = {
-    selectActive: () => activeListStream.asObservable()
-  };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [
-          MoviesListDetailsComponent,
-          MockComponent(MovieComponent),
-          MockComponent(DialogComponent)
-        ],
-        providers: [
-          {
-            provide: MoviesQuery,
-            useValue: moviesQueryMock
-          },
-          {
-            provide: MoviesListsQuery,
-            useValue: moviesListsQueryMock
-          },
-          {
-            provide: MoviesService,
-            useValue: moviesServiceMock
-          },
-          {
-            provide: MoviesListsService,
-            useValue: moviesListsServiceMock
-          },
-          {
-            provide: ActivatedRoute,
-            useValue: activatedRouteMock
-          },
-          {
-            provide: Router,
-            useValue: routerMock
-          }
-        ]
+  beforeEach(() => {
+    const activatedRouteMock = {
+      paramMap: of({
+        get: () => listIdToUse
       })
-        .overrideComponent(MoviesListDetailsComponent, {
-          set: { changeDetection: ChangeDetectionStrategy.Default }
-        })
-        .compileComponents();
-    })
-  );
+    };
+
+    const moviesListsServiceMock: Partial<MoviesListsService> = {
+      setActive: () => '',
+      remove: () => ''
+    };
+
+    const moviesServiceMock = {
+      initialize: () => '',
+      enableEditMode: () => '',
+      disableEditMode: () => '',
+      deleteMovie: () => '',
+      destroy: () => ''
+    };
+
+    const moviesListsQueryMock = {
+      selectActive: () => activeListStream.asObservable()
+    };
+
+    const moviesQueryMock = {
+      select: () => editModeStream.asObservable(),
+      selectAll: () => allMoviesStream.asObservable(),
+      selectLoading: () => loadingStream.asObservable()
+    };
+
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      declarations: [
+        MoviesListDetailsComponent,
+        MockComponent(MovieComponent),
+        MockComponent(MovieSearchComponent),
+        MockComponent(DialogComponent)
+      ],
+      providers: [
+        {
+          provide: MoviesQuery,
+          useValue: moviesQueryMock
+        },
+        {
+          provide: MoviesListsQuery,
+          useValue: moviesListsQueryMock
+        },
+        {
+          provide: MoviesService,
+          useValue: moviesServiceMock
+        },
+        {
+          provide: MoviesListsService,
+          useValue: moviesListsServiceMock
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: activatedRouteMock
+        }
+      ]
+    }).overrideComponent(MoviesListDetailsComponent, {
+      set: { changeDetection: ChangeDetectionStrategy.Default }
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MoviesListDetailsComponent);
@@ -132,26 +120,14 @@ describe('MoviesListDetailsComponent', () => {
       fixture.detectChanges();
 
       const movieComponents = childComponents<MovieComponent>(fixture, MovieComponent);
-      expect(movieComponents.length).toBe(testMovies.length);
 
+      expect(movieComponents.length).toBe(testMovies.length);
       testMovies.forEach((movie) => {
         const element = movieComponents.find(
           (movieComponent) => movieComponent.movie.id === movie.id
         );
         expect(element).toBeTruthy();
       });
-
-      const helperText = fixture.debugElement.query(By.css('.helper-text'));
-      expect(helperText).toBeFalsy();
-    });
-
-    test('should show a helper text if the list has no movies', () => {
-      allMoviesStream.next([]);
-
-      fixture.detectChanges();
-
-      const helperText = fixture.debugElement.query(By.css('.helper-text'));
-      expect(helperText).toBeTruthy();
     });
 
     test('should show the selected list title', () => {
@@ -160,7 +136,7 @@ describe('MoviesListDetailsComponent', () => {
 
       fixture.detectChanges();
 
-      const title = fixture.debugElement.query(By.css('h1'));
+      const title = getElementForTest(fixture, 'listName');
       expect(title.nativeElement.textContent.trim()).toBe(moviesListToUse.name);
     });
   });
@@ -183,20 +159,20 @@ describe('MoviesListDetailsComponent', () => {
     });
 
     test('should not show the edit button', () => {
-      const editButtons = fixture.debugElement.queryAll(By.css('button.edit-button'));
+      const editButton = getElementForTest(fixture, 'editModeButton');
 
-      expect(editButtons.length).toBe(0);
+      expect(editButton).toBeFalsy();
     });
 
     test('should show the delete list button', () => {
-      const deleteButtons = fixture.debugElement.queryAll(By.css('button.delete-button'));
+      const deleteButton = getElementForTest(fixture, 'deleteButton');
 
-      expect(deleteButtons.length).toBe(1);
+      expect(deleteButton).toBeTruthy();
     });
 
     test('should ask for confirmation when the delete button is clicked', () => {
       expect(component.showConfirmationDialog).toBeFalsy();
-      const deleteButton = fixture.debugElement.query(By.css('button.delete-button'));
+      const deleteButton = getElementForTest(fixture, 'deleteButton');
 
       deleteButton.triggerEventHandler('click', null);
 
@@ -204,8 +180,8 @@ describe('MoviesListDetailsComponent', () => {
     });
 
     test('should hide the confirmation dialog when the user does not want to delete the list', () => {
-      const deleteButton = fixture.debugElement.query(By.css('button.delete-button'));
-      const noButton = fixture.debugElement.query(By.css('button.button-no'));
+      const deleteButton = getElementForTest(fixture, 'deleteButton');
+      const noButton = getElementForTest(fixture, 'cancelDeleteButton');
 
       deleteButton.triggerEventHandler('click', null);
       noButton.triggerEventHandler('click', null);
@@ -214,21 +190,22 @@ describe('MoviesListDetailsComponent', () => {
     });
 
     test('should delete the list when the user clicks the confirmation button', () => {
-      routerMock.navigate.mockClear();
+      const router = TestBed.inject(Router);
+      jest.spyOn(router, 'navigate');
       const moviesListToUse = testMoviesLists[0];
       activeListStream.next(moviesListToUse);
       const moviesListsService = TestBed.inject(MoviesListsService);
       jest.spyOn(moviesListsService, 'remove');
 
-      const deleteButton = fixture.debugElement.query(By.css('button.delete-button'));
-      const yesButton = fixture.debugElement.query(By.css('button.button-yes'));
+      const deleteButton = getElementForTest(fixture, 'deleteButton');
+      const yesButton = getElementForTest(fixture, 'confirmDeleteButton');
 
       deleteButton.triggerEventHandler('click', null);
       yesButton.triggerEventHandler('click', null);
 
       expect(moviesListsService.remove).toHaveBeenCalledWith(moviesListToUse.id);
       expect(component.showConfirmationDialog).toBeFalsy();
-      expect(routerMock.navigate).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalled();
     });
 
     test('should delete a movie when the delete event is triggered', () => {
@@ -243,7 +220,7 @@ describe('MoviesListDetailsComponent', () => {
     });
 
     test('should disable edit mode when done button is clicked', () => {
-      const doneButton = fixture.debugElement.query(By.css('button.done-button'));
+      const doneButton = getElementForTest(fixture, 'doneButton');
       const moviesService = TestBed.inject(MoviesService);
       jest.spyOn(moviesService, 'disableEditMode');
 
@@ -271,36 +248,19 @@ describe('MoviesListDetailsComponent', () => {
     });
 
     test('should not show the done button', () => {
-      const doneButtons = fixture.debugElement.queryAll(By.css('button.done-button'));
+      const doneButton = getElementForTest(fixture, 'doneButton');
 
-      expect(doneButtons.length).toBe(0);
+      expect(doneButton).toBeFalsy();
     });
 
     test('should enable edit mode when edit button is clicked', () => {
-      const editButton = fixture.debugElement.query(By.css('button.edit-button'));
+      const editButton = getElementForTest(fixture, 'editModeButton');
       const moviesService = TestBed.inject(MoviesService);
       jest.spyOn(moviesService, 'enableEditMode');
 
       editButton.triggerEventHandler('click', null);
 
       expect(moviesService.enableEditMode).toHaveBeenCalled();
-    });
-  });
-
-  describe('Back button', () => {
-    test('should have a back button', () => {
-      const backButton = fixture.debugElement.queryAll(By.css('.back-button'));
-
-      expect(backButton.length).toEqual(1);
-    });
-
-    test('should navigate back when the back button is clicked', () => {
-      routerMock.navigate.mockClear();
-      const backButton = fixture.debugElement.query(By.css('.back-button'));
-
-      backButton.triggerEventHandler('click', null);
-
-      expect(routerMock.navigate).toHaveBeenCalled();
     });
   });
 
@@ -313,6 +273,15 @@ describe('MoviesListDetailsComponent', () => {
 
       expect(moviesService.disableEditMode).toHaveBeenCalled();
     });
+
+    test('should destroy the movies service when leaving the movies list details page', () => {
+      const moviesService = TestBed.inject(MoviesService);
+      jest.spyOn(moviesService, 'destroy');
+
+      component.ngOnDestroy();
+
+      expect(moviesService.destroy).toHaveBeenCalled();
+    });
   });
 
   describe('Loading', () => {
@@ -321,7 +290,7 @@ describe('MoviesListDetailsComponent', () => {
 
       fixture.detectChanges();
 
-      const loadingElement = fixture.debugElement.query(By.css('.loading-image'));
+      const loadingElement = getElementForTest(fixture, 'loading');
       expect(loadingElement).toBeTruthy();
     });
 
@@ -330,8 +299,39 @@ describe('MoviesListDetailsComponent', () => {
 
       fixture.detectChanges();
 
-      const loadingElement = fixture.debugElement.query(By.css('.loading-image'));
+      const loadingElement = getElementForTest(fixture, 'loading');
       expect(loadingElement).toBeFalsy();
+    });
+  });
+
+  describe('Add movie', () => {
+    test('should not show the search movie component by default', () => {
+      loadingStream.next(false);
+      fixture.detectChanges();
+
+      expect(component.addMovieMode).toBe(false);
+    });
+
+    test('should show the search movie component when the user wants to search for a movie', () => {
+      loadingStream.next(false);
+      fixture.detectChanges();
+
+      const addModeButton = getElementForTest(fixture, 'addModeButton');
+      addModeButton.triggerEventHandler('click', null);
+
+      expect(component.addMovieMode).toBe(true);
+    });
+
+    test('should dismiss the search movie component when the user is done with that', () => {
+      loadingStream.next(false);
+      fixture.detectChanges();
+      component.addMovieMode = true;
+
+      const searchMovieComponent = childComponents(fixture, MovieSearchComponent)[0];
+      searchMovieComponent.done.emit();
+
+      fixture.detectChanges();
+      expect(component.addMovieMode).toBe(false);
     });
   });
 });

@@ -12,7 +12,6 @@ import { MoviesListsService } from '../state/movies-lists.service';
 @Component({
   selector: 'keepadoo-movies-list-details',
   templateUrl: './movies-list-details.component.html',
-  styleUrls: ['./movies-list-details.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesListDetailsComponent implements OnInit, OnDestroy {
@@ -34,6 +33,7 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.moviesService.initialize();
     this.activatedRoute.paramMap.subscribe((params) => {
       const listId = params.get('id');
       this.moviesListsService.setActive(listId);
@@ -82,5 +82,6 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.moviesService.disableEditMode();
+    this.moviesService.destroy();
   }
 }
