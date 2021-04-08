@@ -5,12 +5,13 @@
     <ng-container *ngIf='moviesLists$ | async; let moviesLists'>
       <ng-container *ngIf='isLoading$ | async; else moviesListsTemplate'>
         <div class='loading-container'>
-          <img class='loading-image' src='/assets/spinner.svg' alt='' />
+          <img data-test-name='loading' class='loading-image' src='/assets/spinner.svg' alt='' />
         </div>
       </ng-container>
       <ng-template #moviesListsTemplate>
         <div class='flex flex-col'>
           <button
+            data-test-name='createButton'
             (click)='createList()'
             class='text-xs font-sans rounded bg-yellow-400 shadow-md mx-2 self-start px-4 py-2 hover:bg-yellow-600 transition duration-200'>
             New list
@@ -19,7 +20,7 @@
           <keepadoo-movies-list
             *ngFor='let moviesList of moviesLists'
             [moviesList]='moviesList'
-            (listClick)='goToList($event)'
+            (listClick)='selectList($event)'
           ></keepadoo-movies-list>
         </div>
         <section *ngIf='moviesLists.length === 0'>
@@ -32,7 +33,7 @@
     </ng-container>
   </section>
 
-  <section class='col-span-2'>
+  <section class='col-span-2' data-test-name='listContent'>
     <router-outlet>
     </router-outlet>
   </section>

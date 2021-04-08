@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MockComponent } from 'ng-mocks';
 import { ReplaySubject } from 'rxjs';
@@ -10,49 +9,49 @@ import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsComponent } from './movies-lists.component';
 import { MoviesList } from '../state/models/movies-list';
 import { MoviesListsService } from '../state/movies-lists.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MoviesListCreateComponent } from '../movies-list-create/movies-list-create.component';
+import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
 
 const moviesListsStream = new ReplaySubject<MoviesList[]>();
 const loadingStream = new ReplaySubject<boolean>();
-const moviesListsQueryMock: Partial<MoviesListsQuery> = {
-  selectAll: () => moviesListsStream.asObservable() as any,
-  selectLoading: () => loadingStream.asObservable()
-};
-
-const routerMock = {
-  navigate: () => {
-    /*dummy function*/
-  }
-};
 
 describe('MoviesListsComponent', () => {
   let component: MoviesListsComponent;
   let fixture: ComponentFixture<MoviesListsComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [MoviesListsComponent, MockComponent(MoviesListComponent)],
-        providers: [
-          {
-            provide: Router,
-            useValue: routerMock
-          },
-          {
-            provide: MoviesListsQuery,
-            useValue: moviesListsQueryMock
-          },
-          {
-            provide: MoviesListsService,
-            useValue: {}
-          }
-        ]
-      })
-        .overrideComponent(MoviesListsComponent, {
-          set: { changeDetection: ChangeDetectionStrategy.Default }
-        })
-        .compileComponents();
-    })
-  );
+  beforeEach(() => {
+    const moviesListsQueryMock: Partial<MoviesListsQuery> = {
+      selectAll: () => moviesListsStream.asObservable() as any,
+      selectLoading: () => loadingStream.asObservable()
+    };
+
+    const moviesListsServiceMock: Partial<MoviesListsService> = {
+      initialize: () => '',
+      destroy: () => ''
+    };
+
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      declarations: [
+        MoviesListsComponent,
+        MockComponent(MoviesListComponent),
+        MockComponent(MoviesListCreateComponent)
+      ],
+      providers: [
+        {
+          provide: MoviesListsQuery,
+          useValue: moviesListsQueryMock
+        },
+        {
+          provide: MoviesListsService,
+          useValue: moviesListsServiceMock
+        }
+      ]
+    }).overrideComponent(MoviesListsComponent, {
+      set: { changeDetection: ChangeDetectionStrategy.Default }
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MoviesListsComponent);
@@ -69,21 +68,16 @@ describe('MoviesListsComponent', () => {
 
     fixture.detectChanges();
 
-    const moviesListsElements = fixture.debugElement.queryAll(By.directive(MoviesListComponent));
+    const moviesListsElements = childComponents(fixture, MoviesListComponent);
     expect(moviesListsElements.length).toBe(testMoviesLists.length);
-    const helperText = fixture.debugElement.query(By.css('.helper-text'));
-    expect(helperText).toBeFalsy();
   });
 
-  test('should show a helper text if the user has no lists', () => {
-    moviesListsStream.next([]);
-    loadingStream.next(false);
-
+  test('should show the list content', () => {
     fixture.detectChanges();
 
-    const helperText = fixture.debugElement.query(By.css('.helper-text'));
+    const listContent = getElementForTest(fixture, 'listContent');
 
-    expect(helperText).toBeTruthy();
+    expect(listContent).toBeTruthy();
   });
 
   test('should show loading when the store is loading', () => {
@@ -92,7 +86,7 @@ describe('MoviesListsComponent', () => {
 
     fixture.detectChanges();
 
-    const loadingElement = fixture.debugElement.query(By.css('.loading-image'));
+    const loadingElement = getElementForTest(fixture, 'loading');
 
     expect(loadingElement).toBeTruthy();
   });
@@ -103,7 +97,7 @@ describe('MoviesListsComponent', () => {
 
     fixture.detectChanges();
 
-    const loadingElement = fixture.debugElement.query(By.css('.loading-image'));
+    const loadingElement = getElementForTest(fixture, 'loading');
 
     expect(loadingElement).toBeFalsy();
   });
@@ -112,16 +106,48 @@ describe('MoviesListsComponent', () => {
     moviesListsStream.next(testMoviesLists);
     loadingStream.next(false);
     const router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    jest.spyOn(router, 'navigate').mockReturnValueOnce('' as any);
 
     fixture.detectChanges();
 
     const listId = testMoviesLists[0].id;
-    const moviesListsElements = fixture.debugElement
-      .queryAll(By.directive(MoviesListComponent))
-      .map((el) => el.componentInstance);
-    (moviesListsElements[0] as MoviesListComponent).listClick.emit(listId);
+    const moviesListsElements = childComponents(fixture, MoviesListComponent);
+    moviesListsElements[0].listClick.emit(listId);
 
     expect(router.navigate).toHaveBeenCalledWith([`/home/movies-lists/${listId}`]);
+  });
+
+  describe('Create new list', () => {
+    test('should not show the create list component by default', () => {
+      moviesListsStream.next(testMoviesLists);
+      loadingStream.next(false);
+      fixture.detectChanges();
+
+      expect(component.createListMode).toBe(false);
+    });
+
+    test('should show the create new list component when the user wants to create a new list', () => {
+      moviesListsStream.next(testMoviesLists);
+      loadingStream.next(false);
+      fixture.detectChanges();
+
+      const newListButton = getElementForTest(fixture, 'createButton');
+      newListButton.triggerEventHandler('click', null);
+
+      expect(component.createListMode).toBe(true);
+    });
+
+    test('should dismiss the create list component when the user is done with that', () => {
+      moviesListsStream.next(testMoviesLists);
+      loadingStream.next(false);
+      fixture.detectChanges();
+      component.createListMode = true;
+
+      const createListComponent = childComponents(fixture, MoviesListCreateComponent)[0];
+      createListComponent.done.emit();
+
+      fixture.detectChanges();
+      expect(component.createListMode).toBe(false);
+    });
   });
 });

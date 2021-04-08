@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsService } from '../state/movies-lists.service';
 
 @Component({
-  selector: 'keepadoo-movies-lists',
   templateUrl: './movies-lists.component.html',
   styleUrls: ['./movies-lists.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MoviesListsComponent {
+export class MoviesListsComponent implements OnInit, OnDestroy {
   moviesLists$ = this.moviesListsQuery.selectAll();
   isLoading$ = this.moviesListsQuery.selectLoading();
 
@@ -21,7 +20,11 @@ export class MoviesListsComponent {
     private router: Router
   ) {}
 
-  goToList(listId: string): void {
+  ngOnInit(): void {
+    this.moviesListsService.initialize();
+  }
+
+  selectList(listId: string): void {
     this.router.navigate([`/home/movies-lists/${listId}`]);
   }
 
@@ -31,5 +34,9 @@ export class MoviesListsComponent {
 
   doneCreatingList(): void {
     this.createListMode = false;
+  }
+
+  ngOnDestroy(): void {
+    this.moviesListsService.destroy();
   }
 }
