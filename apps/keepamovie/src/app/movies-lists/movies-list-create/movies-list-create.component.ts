@@ -5,8 +5,8 @@ import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsService } from '../state/movies-lists.service';
 
 @Component({
+  selector: 'keepadoo-movies-list-create',
   templateUrl: './movies-list-create.component.html',
-  styleUrls: ['./movies-list-create.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesListCreateComponent implements OnInit {
