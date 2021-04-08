@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { of, ReplaySubject, Subject } from 'rxjs';
+import { of, ReplaySubject } from 'rxjs';
 import {
   testMovies,
   testMovieSearchResults,
@@ -15,86 +15,74 @@ import { MoviesService } from './movies.service';
 import { MoviesStore } from './movies.store';
 import { HotToastService } from '@ngneat/hot-toast';
 
+const firestoreMock = {
+  collection() {
+    /*dummy function*/
+  }
+};
+
+const addSpy = jest.fn();
+const deleteSpy = jest.fn();
+
+const deleteMovieInListSpy = jest.fn().mockReturnValue(of());
+const firestoreMockSpy = jest.spyOn(firestoreMock, 'collection').mockReturnValue({
+  valueChanges() {
+    {
+      return of(testMovies);
+    }
+  },
+  snapshotChanges() {
+    {
+      return of([
+        {
+          payload: {
+            doc: {
+              ref: {
+                delete: deleteMovieInListSpy
+              }
+            }
+          }
+        }
+      ]);
+    }
+  },
+  add: addSpy,
+  doc() {
+    return {
+      delete: deleteSpy
+    };
+  }
+} as any);
+
+const userIdStream = new ReplaySubject<string>(1);
+const activeListStream = new ReplaySubject<MoviesList>(1);
+
 describe('MoviesService', () => {
   let service: MoviesService;
   let moviesStore: MoviesStore;
   let notificationService: HotToastService;
 
-  const firestoreMock = {
-    collection() {
-      /*dummy function*/
-    }
-  };
-
-  const addSpy = jest.fn();
-  const deleteSpy = jest.fn();
-
-  const deleteMovieInListSpy = jest.fn().mockReturnValue(of());
-  jest.spyOn(firestoreMock, 'collection').mockReturnValue({
-    valueChanges() {
-      {
-        return of(testMovies);
-      }
-    },
-    snapshotChanges() {
-      {
-        return of([
-          {
-            payload: {
-              doc: {
-                ref: {
-                  delete: deleteMovieInListSpy
-                }
-              }
-            }
-          }
-        ]);
-      }
-    },
-    add: addSpy,
-    doc() {
-      return {
-        delete: deleteSpy
-      };
-    }
-  } as any);
-
-  const userIdStream = new ReplaySubject<string>();
-  const sessionQueryMock = {
-    userId: () => testUser.userId,
-    userId$: userIdStream.asObservable()
-  };
-
-  const activeList = new Subject<MoviesList>();
-  const moviesListsQueryMock = {
-    selectActive: () => activeList.asObservable()
-  };
-
-  const notificationServiceMock = {
-    error: () => {
-      /*dummy function*/
-    },
-    success: () => {
-      /*dummy function*/
-    }
-  };
-
-  const moviesStoreMock: Partial<MoviesStore> = {
-    set: () => {
-      /*dummy function*/
-    },
-    remove: () => {
-      /*dummy function*/
-    },
-    update: () => {
-      /*dummy function*/
-    },
-    setLoading: () => {
-      /*dummy function*/
-    }
-  };
-
   beforeEach(() => {
+    const sessionQueryMock = {
+      userId: () => testUser.userId,
+      userId$: userIdStream.asObservable()
+    };
+
+    const moviesListsQueryMock = {
+      selectActive: () => activeListStream.asObservable()
+    };
+
+    const notificationServiceMock = {
+      error: () => '',
+      success: () => ''
+    };
+
+    const moviesStoreMock: Partial<MoviesStore> = {
+      set: () => '',
+      remove: () => '',
+      update: () => '',
+      setLoading: () => ''
+    };
     TestBed.configureTestingModule({
       providers: [
         MoviesService,
@@ -123,6 +111,7 @@ describe('MoviesService', () => {
 
     addSpy.mockClear();
     deleteSpy.mockClear();
+    firestoreMockSpy.mockClear();
 
     service = TestBed.inject(MoviesService);
     moviesStore = TestBed.inject(MoviesStore);
@@ -134,6 +123,8 @@ describe('MoviesService', () => {
   });
 
   test('should be created', () => {
+    service.initialize();
+
     expect(service).toBeTruthy();
   });
 
@@ -146,15 +137,18 @@ describe('MoviesService', () => {
 
       test('should populate the store with the movies in the currently selected list', () => {
         jest.spyOn(moviesStore, 'set');
-        activeList.next(testMoviesLists[0]);
+        activeListStream.next(testMoviesLists[0]);
+
+        service.initialize();
 
         expect(moviesStore.set).toHaveBeenCalledWith(testMovies);
-        expect(service.getMoviesInList).toHaveBeenCalledWith(testMoviesLists[0].id);
       });
 
       test('should correctly handle the loading state', () => {
         jest.spyOn(moviesStore, 'setLoading');
-        activeList.next(testMoviesLists[0]);
+        activeListStream.next(testMoviesLists[0]);
+
+        service.initialize();
 
         expect(moviesStore.setLoading).toHaveBeenCalledTimes(2);
         expect(moviesStore.setLoading).toHaveBeenCalledWith(true);
@@ -163,7 +157,9 @@ describe('MoviesService', () => {
 
       test('should clear the store if there is no selected list', () => {
         jest.spyOn(moviesStore, 'set');
-        activeList.next(undefined);
+        activeListStream.next(undefined);
+
+        service.initialize();
 
         expect(moviesStore.set).toHaveBeenCalledWith([]);
       });
@@ -172,9 +168,10 @@ describe('MoviesService', () => {
     describe('User is not logged in', () => {
       test('should clear the store', () => {
         jest.spyOn(moviesStore, 'set');
-
         userIdStream.next('');
-        activeList.next(testMoviesLists[0]);
+        activeListStream.next(testMoviesLists[0]);
+
+        service.initialize();
 
         expect(moviesStore.set).toHaveBeenCalledWith([]);
       });
@@ -182,20 +179,25 @@ describe('MoviesService', () => {
   });
 
   describe('getMoviesInList', () => {
-    test('should get movies in list', (done) => {
-      service.getMoviesInList('1').subscribe((data: Movie[]) => {
-        expect(data).toEqual(testMovies);
-        done();
-      });
+    test('should get movies in list', () => {
+      let movies: Movie[];
+
+      service.initialize();
+      service.getMoviesInList('1').subscribe((data: Movie[]) => (movies = data));
+
+      expect(movies).toEqual(testMovies);
     });
   });
 
   describe('addMovieToList', () => {
-    test('should add the movie to the list', async () => {
+    test('should add the movie to the list', () => {
       const listId = '123';
       const movieToAdd = testMovieSearchResults[0];
+      addSpy.mockReturnValueOnce(of({}));
 
-      await service.addMovieToList(listId, movieToAdd);
+      service.initialize();
+      service.addMovieToList(listId, movieToAdd).subscribe();
+
       expect(addSpy).toHaveBeenCalledWith({
         ...movieToAdd,
         listId,
@@ -205,15 +207,15 @@ describe('MoviesService', () => {
   });
 
   describe('deleteMovie', () => {
-    test('should delete the movie', async () => {
+    test('should delete the movie', () => {
       jest.spyOn(notificationService, 'success');
-      jest.spyOn(moviesStore, 'remove');
-
       const movieToDelete = testMovies[0];
+      deleteSpy.mockReturnValueOnce(of({}));
 
-      await service.deleteMovie(movieToDelete);
+      service.initialize();
+      service.deleteMovie(movieToDelete);
+
       expect(deleteSpy).toHaveBeenCalled();
-      expect(moviesStore.remove).toHaveBeenCalledWith(movieToDelete.id);
       expect(notificationService.success).toHaveBeenCalledWith(expect.any(String), {
         duration: 3000
       });
@@ -221,10 +223,12 @@ describe('MoviesService', () => {
   });
 
   describe('deleteMoviesInList', () => {
-    test('should delete the movies in the list', async () => {
+    test('should delete the movies in the list', () => {
       const listId = 'list-id-here';
 
-      await service.deleteMoviesInList(listId);
+      service.initialize();
+      service.deleteMoviesInList(listId).subscribe();
+
       expect(deleteMovieInListSpy).toHaveBeenCalled();
     });
   });
@@ -233,7 +237,9 @@ describe('MoviesService', () => {
     test('should set editMode to true', () => {
       jest.spyOn(moviesStore, 'update');
 
+      service.initialize();
       service.enableEditMode();
+
       expect(moviesStore.update).toHaveBeenCalledWith({ editMode: true });
     });
   });
@@ -242,7 +248,9 @@ describe('MoviesService', () => {
     test('should set editMode to false', () => {
       jest.spyOn(moviesStore, 'update');
 
+      service.initialize();
       service.disableEditMode();
+
       expect(moviesStore.update).toHaveBeenCalledWith({
         editMode: false
       });
