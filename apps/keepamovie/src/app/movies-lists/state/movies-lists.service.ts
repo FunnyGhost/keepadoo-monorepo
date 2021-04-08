@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { from } from 'rxjs';
+import { EMPTY, from, of, Subscription } from 'rxjs';
 import { SessionQuery } from '../../state/session.query';
 import { MovieSearchResult } from '../movie-search/state/models/movie-search-results';
 import { MoviesService } from '../movies/state/movies.service';
@@ -8,10 +8,12 @@ import { MoviesList } from './models/movies-list';
 import { MoviesListsQuery } from './movies-lists.query';
 import { MoviesListsStore } from './movies-lists.store';
 import { HotToastService } from '@ngneat/hot-toast';
+import { catchError, finalize, switchMap } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MoviesListsService {
   private moviesListsCollection: AngularFirestoreCollection;
+  private sessionSubscription: Subscription;
 
   constructor(
     private moviesListsQuery: MoviesListsQuery,
@@ -20,66 +22,77 @@ export class MoviesListsService {
     private sessionQuery: SessionQuery,
     private moviesService: MoviesService,
     private toast: HotToastService
-  ) {
-    this.sessionQuery.userId$.subscribe((userId: string) => {
-      if (userId) {
-        this.setupMoviesListsCollection(firestoreService, userId);
-        this.fetch();
-      } else {
-        this.moviesListsStore.set([]);
-      }
-    });
-  }
+  ) {}
 
-  fetch(): void {
-    this.moviesListsCollection
-      .valueChanges({ idField: 'id' })
-      .subscribe((moviesLists: MoviesList[]) => {
+  initialize(): void {
+    this.sessionSubscription = this.sessionQuery.userId$
+      .pipe(
+        switchMap((userId) => {
+          if (userId) {
+            this.setupMoviesListsCollection(this.firestoreService, userId);
+            return this.moviesListsCollection.valueChanges({ idField: 'id' });
+          }
+
+          return of([]);
+        })
+      )
+      .subscribe((moviesLists) => {
         this.moviesListsStore.set(moviesLists);
       });
   }
 
-  async add(moviesList: Partial<MoviesList>): Promise<void> {
+  add(moviesList: Partial<MoviesList>) {
     this.moviesListsStore.setLoading(true);
-    try {
-      const userId = this.sessionQuery.userId();
-      const id = this.firestoreService.createId();
-      const list = {
-        ...moviesList,
-        id,
-        userId,
-        moviesCount: 0,
-        recentMovies: []
-      } as MoviesList;
-      await this.moviesListsCollection.doc(id).set(list);
-      this.moviesListsStore.add(list);
-      this.toast.success('List created!', {
-        duration: 3000
-      });
-    } catch (err) {
-      this.moviesListsStore.setError(err);
-      this.toast.error('List creation failed.', {
-        duration: 3000
-      });
-    }
+    const userId = this.sessionQuery.userId();
+    const id = this.firestoreService.createId();
+    const list = {
+      ...moviesList,
+      id,
+      userId,
+      moviesCount: 0,
+      recentMovies: []
+    } as MoviesList;
 
-    this.moviesListsStore.setLoading(false);
+    from(this.moviesListsCollection.doc(id).set(list))
+      .pipe(
+        catchError((err) => {
+          this.moviesListsStore.setError(err);
+          this.toast.error('List creation failed.', {
+            duration: 3000
+          });
+
+          return EMPTY;
+        }),
+        finalize(() => this.moviesListsStore.setLoading(false))
+      )
+      .subscribe(() => {
+        this.toast.success('List created!', {
+          duration: 3000
+        });
+      });
   }
 
-  async update(id, moviesList: Partial<MoviesList>): Promise<void> {
-    await this.moviesListsCollection.doc(id).update(moviesList);
-    this.moviesListsStore.update(id, moviesList);
-    this.toast.success('List updated!', {
-      duration: 3000
+  update(id, moviesList: Partial<MoviesList>) {
+    this.moviesListsStore.setLoading(true);
+    from(this.moviesListsCollection.doc(id).update(moviesList)).subscribe(() => {
+      this.moviesListsStore.setLoading(false);
+      this.toast.success('List updated!', {
+        duration: 3000
+      });
     });
   }
 
-  async remove(id: string): Promise<void> {
-    await this.moviesService.deleteMoviesInList(id);
-    await this.moviesListsCollection.doc(id).delete();
-    this.toast.success('List deleted!', {
-      duration: 3000
-    });
+  remove(id: string) {
+    this.moviesListsStore.setLoading(true);
+    this.moviesService
+      .deleteMoviesInList(id)
+      .pipe(switchMap(() => this.moviesListsCollection.doc(id).delete()))
+      .subscribe(() => {
+        this.moviesListsStore.setLoading(false);
+        this.toast.success('List deleted!', {
+          duration: 3000
+        });
+      });
   }
 
   setActive(id: string): void {
@@ -90,13 +103,12 @@ export class MoviesListsService {
     this.moviesListsStore.removeActive(id);
   }
 
-  addMovieToCurrentList(movie: MovieSearchResult): void {
+  addMovieToCurrentList(movie: MovieSearchResult) {
     const activeList = this.moviesListsQuery.getActive() as MoviesList;
-    from(this.moviesService.addMovieToList(activeList.id, movie)).subscribe(() => {
+    this.moviesService.addMovieToList(activeList.id, movie).subscribe(() => {
       this.toast.success('Movie added!', {
         duration: 3000
       });
-      this.fetch();
     });
   }
 
@@ -106,5 +118,9 @@ export class MoviesListsService {
       /* istanbul ignore next */
       (ref) => ref.where('userId', '==', userId)
     );
+  }
+
+  destroy(): void {
+    this.sessionSubscription.unsubscribe();
   }
 }
