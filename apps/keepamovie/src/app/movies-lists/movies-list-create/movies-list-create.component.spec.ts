@@ -6,6 +6,8 @@ import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsService } from '../state/movies-lists.service';
 import { MoviesListCreateComponent } from './movies-list-create.component';
 import { getElementForTest } from '../../../test-utilities/test-functions';
+import { MockComponent } from 'ng-mocks';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 const errorStream = new ReplaySubject<string>(1);
 const loadingStream = new ReplaySubject<boolean>(1);
@@ -27,7 +29,7 @@ describe('MoviesListCreateComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
-      declarations: [MoviesListCreateComponent],
+      declarations: [MoviesListCreateComponent, MockComponent(SvgIconComponent)],
       providers: [
         {
           provide: MoviesListsService,

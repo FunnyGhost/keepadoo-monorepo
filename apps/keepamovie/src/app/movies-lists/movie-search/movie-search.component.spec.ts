@@ -12,6 +12,7 @@ import { MovieSearchQuery } from './state/movie-search.query';
 import { MovieSearchService } from './state/movie-search.service';
 import { MovieSearchResult } from './state/models/movie-search-results';
 import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 describe('MovieSearchComponent', () => {
   let component: MovieSearchComponent;
@@ -37,7 +38,11 @@ describe('MovieSearchComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, RouterTestingModule],
-      declarations: [MovieSearchComponent, MockComponent(MovieSearchResultComponent)],
+      declarations: [
+        MovieSearchComponent,
+        MockComponent(MovieSearchResultComponent),
+        MockComponent(SvgIconComponent)
+      ],
       providers: [
         { provide: MovieSearchService, useValue: movieSearchMock },
         { provide: MoviesListsService, useValue: movieListServiceMock },
