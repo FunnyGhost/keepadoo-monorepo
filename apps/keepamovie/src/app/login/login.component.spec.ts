@@ -7,7 +7,8 @@ import { SessionQuery } from '../state/session.query';
 import { LoginComponent } from './login.component';
 import { MockComponent } from 'ng-mocks';
 import { RouterLinkWithHref } from '@angular/router';
-import { getElementForTest, getElementsForTest } from '../../test-utilities/test-functions';
+import { getElementForTest, getElementsForTest } from '@test-utilities/test-functions';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 const queryMock = {
   error: new BehaviorSubject<string | null>(null),
@@ -32,7 +33,11 @@ describe('LoginComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
-      declarations: [LoginComponent, MockComponent(RouterLinkWithHref)],
+      declarations: [
+        LoginComponent,
+        MockComponent(RouterLinkWithHref),
+        MockComponent(SvgIconComponent)
+      ],
       providers: [
         {
           provide: AuthService,

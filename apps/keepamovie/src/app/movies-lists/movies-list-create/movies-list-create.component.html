@@ -22,10 +22,8 @@
       class='text-xs font-sans rounded bg-yellow-400 shadow-md px-4 py-2 hover:bg-yellow-600 hover:text-white transition duration-200'
       (click)='onSubmit()'
       [disabled]='!moviesListForm.valid'
-      [class.loading]='loading$ | async'
     >
-      <img *ngIf='loading$ | async' class='loading-image' src='/assets/spinner.svg' alt='' />
-      <span *ngIf='(loading$ | async) === false'>Create</span>
+      <span>Create</span>
     </button>
 
     <div class='text-sm font-sans text-red-500' data-test-name='error'

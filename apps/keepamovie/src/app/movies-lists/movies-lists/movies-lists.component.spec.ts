@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MockComponent } from 'ng-mocks';
 import { ReplaySubject } from 'rxjs';
-import { testMoviesLists } from '../../../test-utilities/test-objects';
+import { testMoviesLists } from '@test-utilities/test-objects';
 import { MoviesListComponent } from '../movies-list/movies-list.component';
 import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsComponent } from './movies-lists.component';
@@ -11,7 +11,8 @@ import { MoviesList } from '../state/models/movies-list';
 import { MoviesListsService } from '../state/movies-lists.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MoviesListCreateComponent } from '../movies-list-create/movies-list-create.component';
-import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
+import { childComponents, getElementForTest } from '@test-utilities/test-functions';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 const moviesListsStream = new ReplaySubject<MoviesList[]>();
 const loadingStream = new ReplaySubject<boolean>();
@@ -36,7 +37,8 @@ describe('MoviesListsComponent', () => {
       declarations: [
         MoviesListsComponent,
         MockComponent(MoviesListComponent),
-        MockComponent(MoviesListCreateComponent)
+        MockComponent(MoviesListCreateComponent),
+        MockComponent(SvgIconComponent)
       ],
       providers: [
         {

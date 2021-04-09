@@ -1,7 +1,7 @@
 <div>
   <ng-container *ngIf='isLoading$ | async; else moviesTemplate'>
-    <div>
-      <img data-test-name='loading' src='/assets/spinner.svg' alt='' />
+    <div class='flex justify-center items-center'>
+      <svg-icon data-test-name='loading' class='w-24 h-24' key='loading'></svg-icon>
     </div>
   </ng-container>
   <ng-template #moviesTemplate>
@@ -16,7 +16,8 @@
         data-test-name='addModeButton'
         (click)='enableAddMode()'
         class='text-xs text-gray-600 rounded-full h-8 w-8 bg-yellow-400 shadow-md mx-2 hover:bg-yellow-600 hover:text-white transition duration-200'>
-        <svg-icon key="plus" class='flex justify-center items-center w-full bg-transparent'></svg-icon>
+        <svg-icon key='plus'
+                  class='flex justify-center items-center w-full bg-transparent'></svg-icon>
       </button>
 
       <button
