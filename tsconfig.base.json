@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@app/svg/*": ["apps/keepamovie/src/app/svg/*"],
+      "@test-utilities/*": ["apps/keepamovie/src/test-utilities/*"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
