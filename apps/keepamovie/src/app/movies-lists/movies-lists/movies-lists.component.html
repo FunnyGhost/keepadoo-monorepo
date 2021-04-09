@@ -13,8 +13,11 @@
           <button
             data-test-name='createButton'
             (click)='createList()'
-            class='text-xs font-sans text-gray-700 rounded bg-yellow-400 shadow-md mx-2 self-start px-4 py-2 hover:bg-yellow-600 hover:text-white transition duration-200'>
-            New list
+            class='flex justify-center items-center text-xs font-sans text-gray-700 rounded bg-yellow-400 shadow-md mx-2 self-start px-4 py-1 hover:bg-yellow-600 hover:text-white transition duration-200'>
+            <svg-icon key='plus' class='mr-2' size='lg'></svg-icon>
+            <span>
+              New list
+            </span>
           </button>
 
           <keepadoo-movies-list
