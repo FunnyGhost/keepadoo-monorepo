@@ -16,6 +16,7 @@ import { Movie } from '../movies/state/models/movie';
 import { MoviesList } from '../state/models/movies-list';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MovieSearchComponent } from '../movie-search/movie-search.component';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 describe('MoviesListDetailsComponent', () => {
   let component: MoviesListDetailsComponent;
@@ -64,7 +65,8 @@ describe('MoviesListDetailsComponent', () => {
         MoviesListDetailsComponent,
         MockComponent(MovieComponent),
         MockComponent(MovieSearchComponent),
-        MockComponent(DialogComponent)
+        MockComponent(DialogComponent),
+        MockComponent(SvgIconComponent)
       ],
       providers: [
         {
