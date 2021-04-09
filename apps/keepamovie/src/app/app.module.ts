@@ -13,6 +13,9 @@ import { RegisterComponent } from './register/register.component';
 import { DialogModule } from './shared/dialog/dialog.module';
 import { AuthGuard } from './state/auth.guard';
 import { HotToastModule } from '@ngneat/hot-toast';
+import { SvgIconsModule } from '@ngneat/svg-icon';
+import { appPlusIcon } from './svg/plus';
+import { appCloseIcon } from './svg/close';
 
 const routes: Route[] = [
   {
@@ -65,7 +68,10 @@ const routes: Route[] = [
       enabled: environment.production,
       registrationStrategy: 'registerImmediately'
     }),
-    HotToastModule.forRoot()
+    HotToastModule.forRoot(),
+    SvgIconsModule.forRoot({
+      icons: [appPlusIcon, appCloseIcon]
+    })
   ],
   bootstrap: [AppComponent]
 })

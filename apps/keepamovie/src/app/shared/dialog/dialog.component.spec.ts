@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DialogComponent } from './dialog.component';
 import { getElementForTest } from '../../../test-utilities/test-functions';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MockComponent } from 'ng-mocks';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 describe('DialogComponent', () => {
   let component: DialogComponent;
@@ -10,7 +12,7 @@ describe('DialogComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
-      declarations: [DialogComponent]
+      declarations: [DialogComponent, MockComponent(SvgIconComponent)]
     });
   });
 

@@ -30,7 +30,8 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "postinstall": "ngcc --properties es2015 browser module main"
+    "postinstall": "ngcc --properties es2015 browser module main",
+    "generate-icons": "svg-generator"
   },
   "private": true,
   "dependencies": {
@@ -47,6 +48,7 @@
     "@datorama/akita": "6.0.0",
     "@ngneat/hot-toast": "1.0.3",
     "@ngneat/overview": "1.0.0-beta.7",
+    "@ngneat/svg-icon": "^3.1.1",
     "core-js": "3.9.0",
     "firebase": "8.2.9",
     "firebase-admin": "9.5.0",
@@ -64,6 +66,7 @@
     "@angular/compiler-cli": "^11.2.0",
     "@angular/language-service": "^11.2.0",
     "@datorama/akita-ngdevtools": "6.0.0",
+    "@ngneat/svg-generator": "^2.0.0",
     "@ngneat/tailwind": "^6.0.3",
     "@nrwl/angular": "12.0.0",
     "@nrwl/cli": "12.0.0",
@@ -95,5 +98,18 @@
     "ts-jest": "26.4.0",
     "ts-node": "~9.1.1",
     "typescript": "~4.0.3"
+  },
+  "svgGenerator": {
+    "outputPath": "apps/keepamovie/src/app/svg",
+    "prefix": "app",
+    "srcPath": "apps/keepamovie/src/assets/svg",
+    "svgoConfig": {
+      "plugins": [
+        {
+          "removeDimensions": true,
+          "cleanupAttrs": true
+        }
+      ]
+    }
   }
 }
