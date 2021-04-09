@@ -48,7 +48,7 @@
 
     <section *ngIf='(editMode$ | async) === true' class='mt-4'>
       <button (click)='askForDeleteConfirmation()' data-test-name='deleteButton'
-              class='text-xs font-sans rounded bg-red-400 shadow-md py-2 px-8 hover:bg-red-600 hover:text-white transition duration-200'>
+              class='text-xs font-sans text-gray-600 rounded bg-red-400 shadow-md py-2 px-8 hover:bg-red-600 hover:text-white transition duration-200'>
         Delete list
       </button>
 
@@ -57,7 +57,7 @@
         <section class='mt-8'>
           <button
             data-test-name='confirmDeleteButton'
-            class='text-xs font-sans rounded bg-red-300 shadow-md py-2 px-6 mr-2 hover:bg-red-600 hover:text-white transition duration-200'
+            class='text-xs font-sans text-gray-600 rounded bg-red-300 shadow-md py-2 px-6 mr-2 hover:bg-red-600 hover:text-white transition duration-200'
             (click)='deleteList()'>Yes
           </button>
           <button

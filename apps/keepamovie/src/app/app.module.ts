@@ -18,6 +18,7 @@ import { appPlusIcon } from './svg/plus';
 import { appCloseIcon } from './svg/close';
 import { appStarIcon } from '@app/svg/star';
 import { appLogoutIcon } from '@app/svg/logout';
+import { appTrashIcon } from '@app/svg/trash';
 
 const routes: Route[] = [
   {
@@ -72,7 +73,7 @@ const routes: Route[] = [
     }),
     HotToastModule.forRoot(),
     SvgIconsModule.forRoot({
-      icons: [appPlusIcon, appCloseIcon, appStarIcon, appLogoutIcon]
+      icons: [appPlusIcon, appCloseIcon, appStarIcon, appLogoutIcon, appTrashIcon]
     })
   ],
   bootstrap: [AppComponent]
