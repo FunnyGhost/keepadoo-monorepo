@@ -12,5 +12,8 @@
     {
       "path": "./tsconfig.editor.json"
     }
-  ]
+  ],
+  "paths": {
+    "@app/svg/*": ["apps/keepamovie/src/app/svg/*"]
+  }
 }
