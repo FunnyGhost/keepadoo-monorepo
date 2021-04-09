@@ -5,6 +5,8 @@ import { HomeComponent } from './home.component';
 import { getElementForTest } from '../../test-utilities/test-functions';
 import { SessionQuery } from '../state/session.query';
 import { ReplaySubject } from 'rxjs';
+import { MockComponent } from 'ng-mocks';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -27,7 +29,7 @@ describe('HomeComponent', () => {
           useValue: sessionQueryMock
         }
       ],
-      declarations: [HomeComponent]
+      declarations: [HomeComponent, MockComponent(SvgIconComponent)]
     });
   });
 
