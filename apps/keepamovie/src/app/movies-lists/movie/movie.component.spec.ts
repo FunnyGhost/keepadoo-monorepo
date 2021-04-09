@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { testMovies } from '../../../test-utilities/test-objects';
+import { testMovies } from '@test-utilities/test-objects';
 import { MovieComponent } from './movie.component';
-import { getElementForTest } from '../../../test-utilities/test-functions';
-import { MockPipe } from 'ng-mocks';
-import { RatingPipe } from '../../shared/rating/rating.pipe';
+import { childComponents, getElementForTest } from '@test-utilities/test-functions';
+import { MockComponent } from 'ng-mocks';
+import { RatingComponent } from '../../shared/rating/rating/rating.component';
 
 describe('MovieComponent', () => {
   const movieToUse = testMovies[0];
@@ -13,7 +13,7 @@ describe('MovieComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MovieComponent, MockPipe(RatingPipe, (value) => String(value))]
+      declarations: [MovieComponent, MockComponent(RatingComponent)]
     }).overrideComponent(MovieComponent, {
       set: { changeDetection: ChangeDetectionStrategy.Default }
     });
@@ -57,9 +57,9 @@ describe('MovieComponent', () => {
 
     test('should show the movie rating', () => {
       fixture.detectChanges();
-      const movieRating = getElementForTest(fixture, 'movieRating');
+      const movieRating = childComponents<RatingComponent>(fixture, RatingComponent)[0];
 
-      expect(movieRating.nativeElement.textContent).toContain(movieToUse.vote_average);
+      expect(movieRating.rating).toEqual(movieToUse.vote_average);
     });
   });
 
