@@ -1,11 +1,11 @@
 <section class='flex flex-col mb-2 p-2 border-b border-purple-300' (click)='listClicked()'>
   <div class='flex flex-row items-baseline my-2'>
-    <h4 class='text-base font-serif font-bold text-gray-800'
+    <h4 class='text-base font-serif font-bold text-gray-700'
         data-test-name='listName'>{{ moviesList.name }}</h4>
     <span class='text-xs font-sans font-this text-gray-400 ml-1'
           data-test-name='listCount'>{{ moviesList.moviesCount }}</span>
     <button
-      class='text-xs font-sans text-yellow-600 flex-grow text-right hover:text-yellow-800 transition duration-200'
+      class='text-xs font-sans text-yellow-600 flex-grow text-right hover:text-yellow-900 transition duration-200'
       data-test-name='selectButton' (click)='listClicked()'>See all >
     </button>
   </div>

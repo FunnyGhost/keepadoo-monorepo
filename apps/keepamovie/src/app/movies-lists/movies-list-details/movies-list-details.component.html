@@ -6,7 +6,7 @@
   </ng-container>
   <ng-template #moviesTemplate>
     <section class='border-b border-gray-100 flex flex-row mb-4 items-end py-2'>
-      <h1 class='text-2xl text-gray-800 font-bold font-serif flex-grow'
+      <h1 class='text-2xl text-gray-700 font-bold font-serif flex-grow'
           data-test-name='listName'
           *ngIf='selectedList$ | async as selectedList'>
         {{ selectedList.name }}
@@ -15,18 +15,18 @@
       <button
         data-test-name='addModeButton'
         (click)='enableAddMode()'
-        class='text-xs text-gray-600 rounded-full h-8 w-8 bg-yellow-400 shadow-md mx-2 hover:bg-yellow-600 transition duration-200'>
+        class='text-xs text-gray-600 rounded-full h-8 w-8 bg-yellow-400 shadow-md mx-2 hover:bg-yellow-600 hover:text-white transition duration-200'>
         <svg-icon key="plus" class='flex justify-center items-center w-full bg-transparent'></svg-icon>
       </button>
 
       <button
         data-test-name='editModeButton'
-        class='text-xs text-gray-600 font-sans bg-white rounded shadow-md mx-2 py-2 px-4 hover:bg-gray-300 transition duration-200'
+        class='text-xs text-gray-600 w-16 font-sans bg-white rounded shadow-md mx-2 py-2 hover:bg-gray-300 transition duration-200'
         (click)='edit()' *ngIf='(editMode$ | async) === false'>Edit
       </button>
       <button
         data-test-name='doneButton'
-        class='text-xs text-gray-600 font-sans bg-gray-100 rounded shadow-md mx-2 py-2 px-4 hover:bg-gray-300 transition duration-200'
+        class='text-xs text-gray-600 w-16 font-sans bg-gray-100 rounded shadow-md mx-2 py-2 hover:bg-gray-300 transition duration-200'
         (click)='done()' *ngIf='(editMode$ | async) === true'>Done
       </button>
     </section>
@@ -48,7 +48,7 @@
 
     <section *ngIf='(editMode$ | async) === true' class='mt-4'>
       <button (click)='askForDeleteConfirmation()' data-test-name='deleteButton'
-              class='text-xs font-sans rounded bg-red-400 shadow-md py-2 px-8 hover:bg-red-600 transition duration-200'>
+              class='text-xs font-sans rounded bg-red-400 shadow-md py-2 px-8 hover:bg-red-600 hover:text-white transition duration-200'>
         Delete list
       </button>
 
@@ -57,7 +57,7 @@
         <section class='mt-8'>
           <button
             data-test-name='confirmDeleteButton'
-            class='text-xs font-sans rounded bg-red-400 shadow-md py-2 px-6 mr-2 hover:bg-red-600 transition duration-200'
+            class='text-xs font-sans rounded bg-red-300 shadow-md py-2 px-6 mr-2 hover:bg-red-600 hover:text-white transition duration-200'
             (click)='deleteList()'>Yes
           </button>
           <button
