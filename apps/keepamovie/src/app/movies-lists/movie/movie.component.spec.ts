@@ -5,6 +5,7 @@ import { MovieComponent } from './movie.component';
 import { childComponents, getElementForTest } from '@test-utilities/test-functions';
 import { MockComponent } from 'ng-mocks';
 import { RatingComponent } from '../../shared/rating/rating/rating.component';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 describe('MovieComponent', () => {
   const movieToUse = testMovies[0];
@@ -13,7 +14,11 @@ describe('MovieComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MovieComponent, MockComponent(RatingComponent)]
+      declarations: [
+        MovieComponent,
+        MockComponent(RatingComponent),
+        MockComponent(SvgIconComponent)
+      ]
     }).overrideComponent(MovieComponent, {
       set: { changeDetection: ChangeDetectionStrategy.Default }
     });

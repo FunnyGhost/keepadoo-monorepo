@@ -2,8 +2,8 @@
   <form class='flex flex-col w-72 bg-purple-50 p-4 space-y-4 rounded shadow-md'
         [formGroup]='loginForm'
         (ngSubmit)='onSubmit()'>
-    <div *ngIf='(loading$ | async) === true'>
-      <img data-test-name='loading' src='/assets/spinner.svg' alt='' />
+    <div *ngIf='(loading$ | async) === true' class='flex justify-center items-center'>
+      <svg-icon data-test-name='loading' class='w-24 h-24' key='loading'></svg-icon>
     </div>
 
     <img class='self-center h-16 object-contain' src='assets/logo.png' alt='Keepadoo logo' />
@@ -18,7 +18,7 @@
 
     <button
       data-test-name='submitButton'
-      class='text-sm font-sans rounded bg-yellow-400 shadow-md self-start px-4 py-2 hover:bg-yellow-600 transition duration-200'
+      class='text-sm font-sans rounded bg-yellow-400 shadow-md self-start px-4 py-2 hover:bg-yellow-600 hover:text-white transition duration-200'
       (click)='onSubmit()' [disabled]='!loginForm.valid'>
       Login
     </button>

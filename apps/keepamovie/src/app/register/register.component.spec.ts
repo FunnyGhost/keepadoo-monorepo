@@ -5,9 +5,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../state/auth.service';
 import { SessionQuery } from '../state/session.query';
 import { RegisterComponent } from './register.component';
-import { getElementForTest, getElementsForTest } from '../../test-utilities/test-functions';
+import { getElementForTest, getElementsForTest } from '@test-utilities/test-functions';
 import { RouterLinkWithHref } from '@angular/router';
 import { MockComponent } from 'ng-mocks';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 const queryMock = {
   error: new BehaviorSubject<string | null>(null),
@@ -32,7 +33,11 @@ describe('RegisterComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
-      declarations: [RegisterComponent, MockComponent(RouterLinkWithHref)],
+      declarations: [
+        RegisterComponent,
+        MockComponent(RouterLinkWithHref),
+        MockComponent(SvgIconComponent)
+      ],
       providers: [
         {
           provide: AuthService,
