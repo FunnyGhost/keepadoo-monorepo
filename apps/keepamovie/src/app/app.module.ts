@@ -16,6 +16,7 @@ import { HotToastModule } from '@ngneat/hot-toast';
 import { SvgIconsModule } from '@ngneat/svg-icon';
 import { appPlusIcon } from './svg/plus';
 import { appCloseIcon } from './svg/close';
+import { appStarIcon } from '@app/svg/star';
 
 const routes: Route[] = [
   {
@@ -70,7 +71,7 @@ const routes: Route[] = [
     }),
     HotToastModule.forRoot(),
     SvgIconsModule.forRoot({
-      icons: [appPlusIcon, appCloseIcon]
+      icons: [appPlusIcon, appCloseIcon, appStarIcon]
     })
   ],
   bootstrap: [AppComponent]

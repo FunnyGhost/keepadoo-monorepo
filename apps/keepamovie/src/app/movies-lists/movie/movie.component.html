@@ -9,8 +9,7 @@
          data-test-name='movieTitle'>{{movie.title}}</p>
       <p class='text-xs font-sans text-gray-400 font-medium'
          data-test-name='movieReleaseDate'>{{movie.release_date | date:'YYYY'}}</p>
-      <p class='text-xs font-sans text-yellow-400 font-bold'
-         data-test-name='movieRating'>{{movie.vote_average | rating}}</p>
+      <keepadoo-rating [rating]='movie.vote_average'></keepadoo-rating>
     </div>
   </div>
   <button
