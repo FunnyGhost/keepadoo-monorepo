@@ -1,5 +1,6 @@
 module.exports = {
   prefix: '',
+  important: true,
   purge: {
     content: ['./apps/**/*.{html,ts}', './libs/**/*.{html,ts}']
   },
