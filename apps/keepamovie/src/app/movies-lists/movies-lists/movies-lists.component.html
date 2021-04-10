@@ -14,7 +14,7 @@
 <div class='grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8 mx-2 relative'>
   <section
     class='absolute top-0 left-0 md:static w-full h-full md:w-auto bg-indigo-100 z-10 transform md:transform-none transition duration-200'
-    [ngClass]='{"-translate-x-full sm:opacity-0 md:opacity-100": hideLists}'>
+    [ngClass]='{"-translate-x-full opacity-0 md:opacity-100": hideLists}'>
     <ng-container *ngIf='moviesLists$ | async; let moviesLists'>
       <ng-container *ngIf='isLoading$ | async; else moviesListsTemplate'>
         <div class='flex justify-center items-center'>
