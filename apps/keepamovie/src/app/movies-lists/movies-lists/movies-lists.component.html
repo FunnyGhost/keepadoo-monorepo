@@ -5,14 +5,16 @@
   data-test-name='toggleListsVisibility'
   (click)='toggleListVisibility()'
   class='md:hidden absolute top-2 right-2 z-20 bg-white shadow rounded-full h-12 w-12 transform transition duration-200'>
-  <svg-icon key='menu' size='lg' class='absolute top-3 right-3 transition duration-200 opacity-0' [class.opacity-100]='hideLists'></svg-icon>
-  <svg-icon key='close' size='lg' class='absolute top-3 right-3 transition duration-200 opacity-0' [class.opacity-100]='!hideLists'></svg-icon>
+  <svg-icon key='menu' size='lg' class='absolute top-3 right-3 transition duration-200 opacity-0'
+            [class.opacity-100]='hideLists'></svg-icon>
+  <svg-icon key='close' size='lg' class='absolute top-3 right-3 transition duration-200 opacity-0'
+            [class.opacity-100]='!hideLists'></svg-icon>
 </button>
 
 <div class='grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8 mx-2 relative'>
-  <section class='absolute top-0 left-0 md:static w-full h-full md:w-auto bg-indigo-100 z-10 transform transition duration-200'
-           [class.-translate-x-full]='hideLists'
-           [class.opacity-0]='hideLists'>
+  <section
+    class='absolute top-0 left-0 md:static w-full h-full md:w-auto bg-indigo-100 z-10 transform md:transform-none transition duration-200'
+    [ngClass]='{"-translate-x-full sm:opacity-0 md:opacity-100": hideLists}'>
     <ng-container *ngIf='moviesLists$ | async; let moviesLists'>
       <ng-container *ngIf='isLoading$ | async; else moviesListsTemplate'>
         <div class='flex justify-center items-center'>

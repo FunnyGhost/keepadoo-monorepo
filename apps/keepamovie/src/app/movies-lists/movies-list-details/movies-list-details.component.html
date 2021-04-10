@@ -37,7 +37,7 @@
     </section>
 
     <section *ngIf='movies$ | async as movies'
-             class='grid grid-cols-1 md:grid-cols-2 justify-items-center md:justify-items-start'>
+             class='grid grid-cols-1 md:grid-cols-2 justify-items-center md:justify-items-start md:gap-4'>
       <keepadoo-movie
         class='w-full px-2 md:px-0'
         *ngFor='let movie of movies'
