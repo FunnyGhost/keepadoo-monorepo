@@ -21,6 +21,7 @@ import { appLogoutIcon } from '@app/svg/logout';
 import { appTrashIcon } from '@app/svg/trash';
 import { appLoadingIcon } from '@app/svg/loading';
 import { appSearchIcon } from '@app/svg/search';
+import { appMenuIcon } from '@app/svg/menu';
 
 const routes: Route[] = [
   {
@@ -82,7 +83,8 @@ const routes: Route[] = [
         appLogoutIcon,
         appTrashIcon,
         appLoadingIcon,
-        appSearchIcon
+        appSearchIcon,
+        appMenuIcon
       ]
     })
   ],
