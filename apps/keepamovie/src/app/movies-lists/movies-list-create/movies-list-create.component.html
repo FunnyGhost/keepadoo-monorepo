@@ -1,14 +1,14 @@
-<div class='flex flex-col w-96 mx-auto'>
-  <button class='self-end my-2' (click)='onClose()' data-test-name='closeButton'>
-    <svg-icon key="close" class='flex justify-center items-center w-full bg-transparent'></svg-icon>
+<div class='flex flex-col mx-4 md:mx-8'>
+  <button class='self-end' (click)='onClose()' data-test-name='closeButton'>
+    <svg-icon key="close" class='my-4 flex justify-center items-center w-full bg-transparent'></svg-icon>
   </button>
 
   <h4 class='font-serif text-lg font-bold mb-8'>New movies list</h4>
-  <form class='mb-4' [formGroup]='moviesListForm'>
+  <form class='mb-6 flex flex-row items-center' [formGroup]='moviesListForm'>
     <label for='listName' class='font-sans text-sm text-gray-600 mr-4'>Name:</label>
     <input
       data-test-name='nameInput'
-      class='shadow border-0 rounded p-3 text-sm font-sans'
+      class='flex-grow max-w-xs shadow border-0 rounded p-3 text-sm font-sans focus:outline-none focus:ring-2 focus:ring-purple-600'
       type='text'
       id='listName'
       placeholder='Name of the new list...'
@@ -19,7 +19,7 @@
   <div>
     <button
       data-test-name='createButton'
-      class='text-xs font-sans rounded bg-yellow-400 shadow-md px-4 py-2 hover:bg-yellow-600 hover:text-white transition duration-200'
+      class='text-xs font-sans rounded bg-yellow-400 shadow-md px-8 py-2 hover:bg-yellow-600 hover:text-white transition duration-200'
       (click)='onSubmit()'
       [disabled]='!moviesListForm.valid'
     >
