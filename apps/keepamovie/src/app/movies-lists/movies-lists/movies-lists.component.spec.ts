@@ -152,4 +152,32 @@ describe('MoviesListsComponent', () => {
       expect(component.createListMode).toBe(false);
     });
   });
+
+  describe('hideLists', () => {
+    test('should not hide lists by default', () => {
+      fixture.detectChanges();
+
+      expect(component.hideLists).toBe(false);
+    });
+
+    test('should hide lists when the user wants to', () => {
+      component.hideLists = false;
+      fixture.detectChanges();
+
+      const toggleVisibilityButton = getElementForTest(fixture, 'toggleListsVisibility');
+      toggleVisibilityButton.triggerEventHandler('click', null);
+
+      expect(component.hideLists).toBe(true);
+    });
+
+    test('should show lists when the user wants to', () => {
+      component.hideLists = true;
+      fixture.detectChanges();
+
+      const toggleVisibilityButton = getElementForTest(fixture, 'toggleListsVisibility');
+      toggleVisibilityButton.triggerEventHandler('click', null);
+
+      expect(component.hideLists).toBe(false);
+    });
+  });
 });

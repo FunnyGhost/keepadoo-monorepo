@@ -12,6 +12,7 @@ export class MoviesListsComponent implements OnInit, OnDestroy {
   isLoading$ = this.moviesListsQuery.selectLoading();
 
   createListMode = false;
+  hideLists = false;
 
   constructor(
     private moviesListsQuery: MoviesListsQuery,
@@ -33,6 +34,10 @@ export class MoviesListsComponent implements OnInit, OnDestroy {
 
   doneCreatingList(): void {
     this.createListMode = false;
+  }
+
+  toggleListVisibility(): void {
+    this.hideLists = !this.hideLists;
   }
 
   ngOnDestroy(): void {
