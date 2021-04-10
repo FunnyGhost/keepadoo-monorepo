@@ -25,6 +25,7 @@ export class MoviesListsComponent implements OnInit, OnDestroy {
   }
 
   selectList(listId: string): void {
+    this.hideLists = true;
     this.router.navigate([`/home/movies-lists/${listId}`]);
   }
 

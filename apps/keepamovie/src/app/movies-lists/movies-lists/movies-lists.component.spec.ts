@@ -104,19 +104,40 @@ describe('MoviesListsComponent', () => {
     expect(loadingElement).toBeFalsy();
   });
 
-  test('should navigate to the list details', () => {
-    moviesListsStream.next(testMoviesLists);
-    loadingStream.next(false);
-    const router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate').mockReturnValueOnce('' as any);
+  describe('selectList', () => {
+    let router: Router;
 
-    fixture.detectChanges();
+    beforeEach(() => {
+      router = TestBed.inject(Router);
+      jest.spyOn(router, 'navigate').mockReturnValueOnce('' as any);
+    });
 
-    const listId = testMoviesLists[0].id;
-    const moviesListsElements = childComponents(fixture, MoviesListComponent);
-    moviesListsElements[0].listClick.emit(listId);
+    test('should navigate to the list details', () => {
+      moviesListsStream.next(testMoviesLists);
+      loadingStream.next(false);
 
-    expect(router.navigate).toHaveBeenCalledWith([`/home/movies-lists/${listId}`]);
+      fixture.detectChanges();
+
+      const listId = testMoviesLists[0].id;
+      const moviesListsElements = childComponents(fixture, MoviesListComponent);
+      moviesListsElements[0].listClick.emit(listId);
+
+      expect(router.navigate).toHaveBeenCalledWith([`/home/movies-lists/${listId}`]);
+    });
+
+    test('should hide the lists', () => {
+      moviesListsStream.next(testMoviesLists);
+      loadingStream.next(false);
+      component.hideLists = false;
+
+      fixture.detectChanges();
+
+      const listId = testMoviesLists[0].id;
+      const moviesListsElements = childComponents(fixture, MoviesListComponent);
+      moviesListsElements[0].listClick.emit(listId);
+
+      expect(component.hideLists).toBe(true);
+    });
   });
 
   describe('Create new list', () => {
