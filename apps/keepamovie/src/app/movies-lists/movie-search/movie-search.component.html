@@ -1,10 +1,10 @@
-<div class='flex flex-col mx-8'>
+<div class='flex flex-col mx-2 md:mx-8'>
   <button class='self-end' (click)='onClose()' data-test-name='closeButton'>
     <svg-icon key="close" class='my-4 flex justify-center items-center w-full bg-transparent'></svg-icon>
   </button>
 
   <section>
-    <div class='relative mx-auto w-80'>
+    <div class='relative mx-auto w-72 md:w-80'>
       <input
         data-test-name='searchInput'
         class='text-sm w-full font-sans font-medium shadow border-0 rounded p-3 pl-10'
@@ -17,7 +17,7 @@
     </div>
   </section>
 
-  <section class='flex flex-row flex-wrap mt-12'>
+  <section class='flex flex-row flex-wrap justify-evenly mt-12'>
     <keepadoo-movie-search-result
       *ngFor='let movie of movieResults$ | async'
       [movie]='movie'
