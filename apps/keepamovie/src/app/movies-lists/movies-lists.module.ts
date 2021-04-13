@@ -12,6 +12,7 @@ import { MoviesListsRoutingModule } from './movies-lists-routing.module';
 import { MoviesListsComponent } from './movies-lists/movies-lists.component';
 import { RatingModule } from '../shared/rating/rating.module';
 import { SvgIconsModule } from '@ngneat/svg-icon';
+import { DeferModule } from '../shared/defer/defer.module';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { SvgIconsModule } from '@ngneat/svg-icon';
     FormsModule,
     ReactiveFormsModule,
     RatingModule,
+    DeferModule,
     SvgIconsModule.forChild([])
   ],
   declarations: [

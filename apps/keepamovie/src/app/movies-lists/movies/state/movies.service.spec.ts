@@ -6,7 +6,7 @@ import {
   testMovieSearchResults,
   testMoviesLists,
   testUser
-} from '../../../../test-utilities/test-objects';
+} from '@test-utilities/test-objects';
 import { SessionQuery } from '../../../state/session.query';
 import { MoviesList } from '../../state/models/movies-list';
 import { MoviesListsQuery } from '../../state/movies-lists.query';
