@@ -48,7 +48,7 @@ export class MoviesService {
       .collection<Movie[]>(
         `movies`,
         /* istanbul ignore next */
-        (ref) => ref.where('listId', '==', listId)
+        (ref) => ref.where('listId', '==', listId).orderBy('added_on', 'desc')
       )
       .valueChanges({ idField: 'key' })
       .pipe(map((data) => (data as unknown) as Movie[]));
