@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MockComponent } from 'ng-mocks';
 import { of, ReplaySubject } from 'rxjs';
-import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
-import { testMovies, testMoviesLists } from '../../../test-utilities/test-objects';
+import { childComponents, getElementForTest } from '@test-utilities/test-functions';
+import { testMovies, testMoviesLists } from '@test-utilities/test-objects';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { MovieComponent } from '../movie/movie.component';
 import { MoviesQuery } from '../movies/state/movies.query';
@@ -14,9 +14,9 @@ import { MoviesListsService } from '../state/movies-lists.service';
 import { MoviesListDetailsComponent } from './movies-list-details.component';
 import { Movie } from '../movies/state/models/movie';
 import { MoviesList } from '../state/models/movies-list';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MovieSearchComponent } from '../movie-search/movie-search.component';
 import { SvgIconComponent } from '@ngneat/svg-icon';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 describe('MoviesListDetailsComponent', () => {
   let component: MoviesListDetailsComponent;
@@ -30,10 +30,8 @@ describe('MoviesListDetailsComponent', () => {
   const activeListStream = new ReplaySubject<MoviesList>();
 
   beforeEach(() => {
-    const activatedRouteMock = {
-      paramMap: of({
-        get: () => listIdToUse
-      })
+    const routerQueryMock: Partial<RouterQuery> = {
+      selectParams: () => of(listIdToUse as any)
     };
 
     const moviesListsServiceMock: Partial<MoviesListsService> = {
@@ -59,8 +57,11 @@ describe('MoviesListDetailsComponent', () => {
       selectLoading: () => loadingStream.asObservable()
     };
 
+    const routerMock = {
+      navigate: () => ''
+    };
+
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
       declarations: [
         MoviesListDetailsComponent,
         MockComponent(MovieComponent),
@@ -86,8 +87,12 @@ describe('MoviesListDetailsComponent', () => {
           useValue: moviesListsServiceMock
         },
         {
-          provide: ActivatedRoute,
-          useValue: activatedRouteMock
+          provide: RouterQuery,
+          useValue: routerQueryMock
+        },
+        {
+          provide: Router,
+          useValue: routerMock
         }
       ]
     }).overrideComponent(MoviesListDetailsComponent, {
@@ -207,7 +212,7 @@ describe('MoviesListDetailsComponent', () => {
 
       expect(moviesListsService.remove).toHaveBeenCalledWith(moviesListToUse.id);
       expect(component.showConfirmationDialog).toBeFalsy();
-      expect(router.navigate).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['home', 'movies-lists']);
     });
 
     test('should delete a movie when the delete event is triggered', () => {

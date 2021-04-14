@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Movie } from '../movies/state/models/movie';
@@ -8,7 +8,10 @@ import { MoviesService } from '../movies/state/movies.service';
 import { MoviesList } from '../state/models/movies-list';
 import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsService } from '../state/movies-lists.service';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'keepadoo-movies-list-details',
   templateUrl: './movies-list-details.component.html',
@@ -24,7 +27,7 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
   addMovieMode = false;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private routerQuery: RouterQuery,
     private moviesListsService: MoviesListsService,
     private moviesService: MoviesService,
     private moviesQuery: MoviesQuery,
@@ -34,10 +37,10 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.moviesService.initialize();
-    this.activatedRoute.paramMap.subscribe((params) => {
-      const listId = params.get('id');
-      this.moviesListsService.setActive(listId);
-    });
+    this.routerQuery
+      .selectParams('id')
+      .pipe(untilDestroyed(this))
+      .subscribe((listId) => this.moviesListsService.setActive(listId));
   }
 
   edit(): void {
@@ -77,7 +80,7 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+    this.router.navigate(['home', 'movies-lists']);
   }
 
   ngOnDestroy(): void {
