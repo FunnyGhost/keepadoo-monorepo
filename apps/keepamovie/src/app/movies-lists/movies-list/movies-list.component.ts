@@ -7,6 +7,7 @@ import { MoviesList } from '../state/models/movies-list';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesListComponent {
+  @Input() isSelected = false;
   @Input() moviesList: MoviesList;
   @Output() listClick = new EventEmitter<string>();
 

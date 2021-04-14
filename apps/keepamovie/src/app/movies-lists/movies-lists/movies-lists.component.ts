@@ -10,6 +10,7 @@ import { MoviesListsService } from '../state/movies-lists.service';
 export class MoviesListsComponent implements OnInit, OnDestroy {
   moviesLists$ = this.moviesListsQuery.selectAll();
   isLoading$ = this.moviesListsQuery.selectLoading();
+  selectedListId$ = this.moviesListsQuery.selectActive<string>((entity) => entity.id);
 
   createListMode = false;
   hideLists = false;

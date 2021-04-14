@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MockComponent } from 'ng-mocks';
-import { ReplaySubject } from 'rxjs';
+import { of, ReplaySubject } from 'rxjs';
 import { testMoviesLists } from '@test-utilities/test-objects';
 import { MoviesListComponent } from '../movies-list/movies-list.component';
 import { MoviesListsQuery } from '../state/movies-lists.query';
@@ -14,6 +14,7 @@ import { MoviesListCreateComponent } from '../movies-list-create/movies-list-cre
 import { childComponents, getElementForTest } from '@test-utilities/test-functions';
 import { SvgIconComponent } from '@ngneat/svg-icon';
 
+const selectedMoviesList = testMoviesLists[0];
 const moviesListsStream = new ReplaySubject<MoviesList[]>();
 const loadingStream = new ReplaySubject<boolean>();
 
@@ -24,7 +25,8 @@ describe('MoviesListsComponent', () => {
   beforeEach(() => {
     const moviesListsQueryMock: Partial<MoviesListsQuery> = {
       selectAll: () => moviesListsStream.asObservable() as any,
-      selectLoading: () => loadingStream.asObservable()
+      selectLoading: () => loadingStream.asObservable(),
+      selectActive: () => of(selectedMoviesList.id as any)
     };
 
     const moviesListsServiceMock: Partial<MoviesListsService> = {
@@ -72,6 +74,22 @@ describe('MoviesListsComponent', () => {
 
     const moviesListsElements = childComponents(fixture, MoviesListComponent);
     expect(moviesListsElements.length).toBe(testMoviesLists.length);
+  });
+
+  test('should mark the selected list', () => {
+    moviesListsStream.next(testMoviesLists);
+    loadingStream.next(false);
+
+    fixture.detectChanges();
+
+    const moviesListsElements = childComponents(fixture, MoviesListComponent);
+    const selectedList = moviesListsElements.find(
+      (listComponent) => listComponent.moviesList === selectedMoviesList
+    );
+    const activeLists = moviesListsElements.filter((listComponent) => listComponent.isSelected);
+
+    expect(selectedList.isSelected).toBe(true);
+    expect(activeLists.length).toBe(1);
   });
 
   test('should show the list content', () => {

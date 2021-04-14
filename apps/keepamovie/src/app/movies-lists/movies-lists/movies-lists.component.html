@@ -35,6 +35,7 @@
 
           <keepadoo-movies-list
             *ngFor='let moviesList of moviesLists'
+            [isSelected]='(selectedListId$ | async) === moviesList.id'
             [moviesList]='moviesList'
             (listClick)='selectList($event)'
           ></keepadoo-movies-list>
