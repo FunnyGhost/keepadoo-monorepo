@@ -22,6 +22,7 @@ import { appTrashIcon } from '@app/svg/trash';
 import { appLoadingIcon } from '@app/svg/loading';
 import { appSearchIcon } from '@app/svg/search';
 import { appMenuIcon } from '@app/svg/menu';
+import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 
 const routes: Route[] = [
   {
@@ -66,6 +67,7 @@ const routes: Route[] = [
     ReactiveFormsModule,
     BrowserModule,
     BrowserAnimationsModule,
+    AkitaNgRouterStoreModule,
     RouterModule.forRoot(routes, {
       initialNavigation: 'enabled',
       relativeLinkResolution: 'legacy'
