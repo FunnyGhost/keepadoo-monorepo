@@ -212,7 +212,7 @@ describe('MoviesListDetailsComponent', () => {
 
       expect(moviesListsService.remove).toHaveBeenCalledWith(moviesListToUse.id);
       expect(component.showConfirmationDialog).toBeFalsy();
-      expect(router.navigate).toHaveBeenCalledWith(['movies-lists']);
+      expect(router.navigate).toHaveBeenCalledWith(['home', 'movies-lists']);
     });
 
     test('should delete a movie when the delete event is triggered', () => {
