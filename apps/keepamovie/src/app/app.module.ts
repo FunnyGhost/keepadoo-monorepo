@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Route, RouterModule } from '@angular/router';
+import { Route, Router, RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
@@ -23,6 +23,7 @@ import { appLoadingIcon } from '@app/svg/loading';
 import { appSearchIcon } from '@app/svg/search';
 import { appMenuIcon } from '@app/svg/menu';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import * as Sentry from '@sentry/angular';
 
 const routes: Route[] = [
   {
@@ -89,6 +90,24 @@ const routes: Route[] = [
         appMenuIcon
       ]
     })
+  ],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler()
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router]
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {
+        /* do stuff here for tracing if needed */
+      },
+      deps: [Sentry.TraceService],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
