@@ -7,12 +7,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class ButtonComponent {
   @Input() icon = '';
   @Input() text = '';
+  @Input() disabled: boolean;
   @Input() buttonType: 'primary' | 'secondary' | 'warning' = 'primary';
 
   @Output()
   clicked = new EventEmitter<void>();
 
   onClick(): void {
-    this.clicked.emit();
+    !this.disabled && this.clicked.emit();
   }
 }
