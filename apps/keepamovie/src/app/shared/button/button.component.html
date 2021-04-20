@@ -1,0 +1,7 @@
+<button
+  (click)='onClick()'
+  class='flex justify-center items-center text-xs font-sans text-gray-700 rounded shadow-md self-start px-4 py-1 my-2 focus:outline-none focus:ring-2 focus:ring-purple-600 transition duration-200'
+  [ngClass]="{'bg-yellow-400 hover:bg-yellow-600 hover:text-white': buttonType === 'primary', '': buttonType === 'secondary'}">
+  <svg-icon *ngIf='icon' [key]='icon' class='mr-2' size='lg'></svg-icon>
+  <span>{{text}}</span>
+</button>
