@@ -14,26 +14,23 @@
         {{ selectedList.name }}
       </h1>
 
-      <button
-        data-test-name='addModeButton'
-        (click)='enableAddMode()'
-        class='flex w-2/5 md:w-auto justify-center items-center text-xs text-gray-700 rounded bg-yellow-400 shadow-md mx-2 px-4 py-1 focus:outline-none focus:ring-2 focus:ring-purple-600 hover:bg-yellow-600 hover:text-white transition duration-200'>
-        <svg-icon key='search' class='mr-2' size='lg'></svg-icon>
-        <span>
-             Add movie
-        </span>
-      </button>
+      <keepadoo-button data-test-name='addModeButton' class='w-2/5 md:w-auto mx-2' text='Add movie'
+                       icon='search'
+                       buttonType='primary'
+                       (clicked)='enableAddMode()'>
+      </keepadoo-button>
 
-      <button
-        data-test-name='editModeButton'
-        class='w-2/5 md:w-16 text-xs text-gray-600 font-sans bg-white rounded shadow-md mx-2 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 hover:bg-gray-300 transition duration-200'
-        (click)='edit()' *ngIf='(editMode$ | async) === false'>Edit
-      </button>
-      <button
-        data-test-name='doneButton'
-        class='w-2/5 md:w-16 text-xs text-gray-600 font-sans bg-gray-100 rounded shadow-md mx-2 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 hover:bg-gray-300 transition duration-200'
-        (click)='done()' *ngIf='(editMode$ | async) === true'>Done
-      </button>
+      <keepadoo-button data-test-name='editModeButton' class='w-2/5 md:w-16' text='Edit'
+                       buttonType='secondary'
+                       *ngIf='(editMode$ | async) === false'
+                       (clicked)='edit()'>
+      </keepadoo-button>
+
+      <keepadoo-button data-test-name='doneButton' class='w-2/5 md:w-16' text='Done'
+                       buttonType='secondary'
+                       *ngIf='(editMode$ | async) === true'
+                       (clicked)='done()'>
+      </keepadoo-button>
     </section>
 
     <section *ngIf='movies$ | async as movies'
@@ -54,24 +51,23 @@
     </section>
 
     <section *ngIf='(editMode$ | async) === true' class='mt-4'>
-      <button (click)='askForDeleteConfirmation()' data-test-name='deleteButton'
-              class='text-xs font-sans text-gray-600 rounded bg-red-400 shadow-md py-2 px-8 focus:outline-none focus:ring-2 focus:ring-purple-600 hover:bg-red-600 hover:text-white transition duration-200'>
-        Delete list
-      </button>
+      <keepadoo-button data-test-name='deleteButton' class='w-32 block' text='Delete list'
+                       buttonType='warning'
+                       *ngIf='(editMode$ | async) === true'
+                       (clicked)='askForDeleteConfirmation()'>
+      </keepadoo-button>
 
       <keepadoo-dialog [(visible)]='showConfirmationDialog'>
         <h4 class='font-sans text-lg font-bold'>Are you sure you want to delete this list?</h4>
-        <section class='mt-8'>
-          <button
-            data-test-name='confirmDeleteButton'
-            class='text-xs font-sans text-gray-600 rounded bg-red-300 shadow-md py-2 px-6 mr-2 focus:outline-none focus:ring-2 focus:ring-purple-600 hover:bg-red-600 hover:text-white transition duration-200'
-            (click)='deleteList()'>Yes
-          </button>
-          <button
-            data-test-name='cancelDeleteButton'
-            class='text-xs font-sans rounded bg-gray-100 shadow-md text-gray-600 py-2 px-6 focus:outline-none focus:ring-2 focus:ring-purple-600 hover:bg-gray-300 transition duration-200'
-            (click)='cancelListDeletion()'>No
-          </button>
+        <section class='mt-8 flex justify-end items-center'>
+          <keepadoo-button data-test-name='confirmDeleteButton' class='w-16' text='Yes'
+                           buttonType='warning'
+                           (clicked)='deleteList()'>
+          </keepadoo-button>
+          <keepadoo-button data-test-name='cancelDeleteButton' class='w-16 ml-2' text='No'
+                           buttonType='secondary'
+                           (clicked)='cancelListDeletion()'>
+          </keepadoo-button>
         </section>
       </keepadoo-dialog>
     </section>

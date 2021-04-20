@@ -15,8 +15,9 @@ import { MoviesListDetailsComponent } from './movies-list-details.component';
 import { Movie } from '../movies/state/models/movie';
 import { MoviesList } from '../state/models/movies-list';
 import { MovieSearchComponent } from '../movie-search/movie-search.component';
-import { SvgIconComponent } from '@ngneat/svg-icon';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ButtonComponent } from '../../shared/button/button.component';
+import { SvgIconComponent } from '@ngneat/svg-icon';
 
 describe('MoviesListDetailsComponent', () => {
   let component: MoviesListDetailsComponent;
@@ -67,6 +68,7 @@ describe('MoviesListDetailsComponent', () => {
         MockComponent(MovieComponent),
         MockComponent(MovieSearchComponent),
         MockComponent(DialogComponent),
+        MockComponent(ButtonComponent),
         MockComponent(SvgIconComponent)
       ],
       providers: [
@@ -156,6 +158,14 @@ describe('MoviesListDetailsComponent', () => {
       fixture.detectChanges();
     });
 
+    test('should show the done button', () => {
+      const doneButton = getElementForTest(fixture, 'doneButton')
+        .componentInstance as ButtonComponent;
+
+      expect(doneButton.text).toBe('Done');
+      expect(doneButton.buttonType).toBe('secondary');
+    });
+
     test('should show the movies in edit mode', () => {
       const movieComponents = childComponents<MovieComponent>(fixture, MovieComponent);
 
@@ -172,26 +182,30 @@ describe('MoviesListDetailsComponent', () => {
     });
 
     test('should show the delete list button', () => {
-      const deleteButton = getElementForTest(fixture, 'deleteButton');
+      const deleteButton = getElementForTest(fixture, 'deleteButton')
+        .componentInstance as ButtonComponent;
 
-      expect(deleteButton).toBeTruthy();
+      expect(deleteButton.buttonType).toBe('warning');
+      expect(deleteButton.text).toBe('Delete list');
     });
 
     test('should ask for confirmation when the delete button is clicked', () => {
       expect(component.showConfirmationDialog).toBeFalsy();
-      const deleteButton = getElementForTest(fixture, 'deleteButton');
-
-      deleteButton.triggerEventHandler('click', null);
+      const deleteButton = getElementForTest(fixture, 'deleteButton')
+        .componentInstance as ButtonComponent;
+      deleteButton.clicked.emit();
 
       expect(component.showConfirmationDialog).toBeTruthy();
     });
 
     test('should hide the confirmation dialog when the user does not want to delete the list', () => {
-      const deleteButton = getElementForTest(fixture, 'deleteButton');
-      const noButton = getElementForTest(fixture, 'cancelDeleteButton');
+      const deleteButton = getElementForTest(fixture, 'deleteButton')
+        .componentInstance as ButtonComponent;
+      const noButton = getElementForTest(fixture, 'cancelDeleteButton')
+        .componentInstance as ButtonComponent;
 
-      deleteButton.triggerEventHandler('click', null);
-      noButton.triggerEventHandler('click', null);
+      deleteButton.clicked.emit();
+      noButton.clicked.emit();
 
       expect(component.showConfirmationDialog).toBeFalsy();
     });
@@ -204,11 +218,13 @@ describe('MoviesListDetailsComponent', () => {
       const moviesListsService = TestBed.inject(MoviesListsService);
       jest.spyOn(moviesListsService, 'remove');
 
-      const deleteButton = getElementForTest(fixture, 'deleteButton');
-      const yesButton = getElementForTest(fixture, 'confirmDeleteButton');
+      const deleteButton = getElementForTest(fixture, 'deleteButton')
+        .componentInstance as ButtonComponent;
+      deleteButton.clicked.emit();
 
-      deleteButton.triggerEventHandler('click', null);
-      yesButton.triggerEventHandler('click', null);
+      const yesButton = getElementForTest(fixture, 'confirmDeleteButton')
+        .componentInstance as ButtonComponent;
+      yesButton.clicked.emit();
 
       expect(moviesListsService.remove).toHaveBeenCalledWith(moviesListToUse.id);
       expect(component.showConfirmationDialog).toBeFalsy();
@@ -227,11 +243,12 @@ describe('MoviesListDetailsComponent', () => {
     });
 
     test('should disable edit mode when done button is clicked', () => {
-      const doneButton = getElementForTest(fixture, 'doneButton');
+      const doneButton = getElementForTest(fixture, 'doneButton')
+        .componentInstance as ButtonComponent;
       const moviesService = TestBed.inject(MoviesService);
       jest.spyOn(moviesService, 'disableEditMode');
 
-      doneButton.triggerEventHandler('click', null);
+      doneButton.clicked.emit();
 
       expect(moviesService.disableEditMode).toHaveBeenCalled();
     });
@@ -243,6 +260,14 @@ describe('MoviesListDetailsComponent', () => {
       editModeStream.next({ editMode: false });
 
       fixture.detectChanges();
+    });
+
+    test('should show the edit button', () => {
+      const editButton = getElementForTest(fixture, 'editModeButton')
+        .componentInstance as ButtonComponent;
+
+      expect(editButton.text).toBe('Edit');
+      expect(editButton.buttonType).toBe('secondary');
     });
 
     test('should not show the movies in edit mode', () => {
@@ -261,11 +286,12 @@ describe('MoviesListDetailsComponent', () => {
     });
 
     test('should enable edit mode when edit button is clicked', () => {
-      const editButton = getElementForTest(fixture, 'editModeButton');
+      const editButton = getElementForTest(fixture, 'editModeButton')
+        .componentInstance as ButtonComponent;
       const moviesService = TestBed.inject(MoviesService);
       jest.spyOn(moviesService, 'enableEditMode');
 
-      editButton.triggerEventHandler('click', null);
+      editButton.clicked.emit();
 
       expect(moviesService.enableEditMode).toHaveBeenCalled();
     });
@@ -319,12 +345,25 @@ describe('MoviesListDetailsComponent', () => {
       expect(component.addMovieMode).toBe(false);
     });
 
+    test('should show the add movie button', () => {
+      loadingStream.next(false);
+      fixture.detectChanges();
+
+      const addButton = getElementForTest(fixture, 'addModeButton')
+        .componentInstance as ButtonComponent;
+
+      expect(addButton.text).toBe('Add movie');
+      expect(addButton.buttonType).toBe('primary');
+      expect(addButton.icon).toBe('search');
+    });
+
     test('should show the search movie component when the user wants to search for a movie', () => {
       loadingStream.next(false);
       fixture.detectChanges();
 
-      const addModeButton = getElementForTest(fixture, 'addModeButton');
-      addModeButton.triggerEventHandler('click', null);
+      const addButton = getElementForTest(fixture, 'addModeButton')
+        .componentInstance as ButtonComponent;
+      addButton.clicked.emit();
 
       expect(component.addMovieMode).toBe(true);
     });
