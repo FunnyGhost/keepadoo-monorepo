@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class ButtonComponent {
   @Input() icon = '';
   @Input() text = '';
-  @Input() buttonType: 'primary' | 'secondary' = 'primary';
+  @Input() buttonType: 'primary' | 'secondary' | 'warning' = 'primary';
 
   @Output()
   clicked = new EventEmitter<void>();
