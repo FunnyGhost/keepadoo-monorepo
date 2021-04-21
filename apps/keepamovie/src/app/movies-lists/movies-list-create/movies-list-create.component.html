@@ -18,15 +18,9 @@
   </form>
 
   <div>
-    <button
-      data-test-name='createButton'
-      class='text-xs font-sans rounded shadow-md px-8 py-2 transition duration-200'
-      [ngClass]='{"bg-yellow-400 hover:bg-yellow-600 hover:text-white": moviesListForm.valid, "bg-yellow-100 cursor-not-allowed text-gray-400": !moviesListForm.valid}'
-      (click)='onSubmit()'
-      [disabled]='!moviesListForm.valid'
-    >
-      <span>Create</span>
-    </button>
+    <keepadoo-button class='w-24 block' text='Create' buttonType='primary'
+                     [disabled]='moviesListForm.invalid' (clicked)='onSubmit()'>
+    </keepadoo-button>
 
     <div class='text-sm font-sans text-red-500' data-test-name='error'
          *ngIf='error$ | async; let error'>{{ error }}</div>

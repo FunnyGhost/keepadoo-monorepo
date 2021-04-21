@@ -13,6 +13,7 @@ import { MoviesListsComponent } from './movies-lists/movies-lists.component';
 import { RatingModule } from '../shared/rating/rating.module';
 import { SvgIconsModule } from '@ngneat/svg-icon';
 import { DeferModule } from '../shared/defer/defer.module';
+import { ButtonModule } from '../shared/button/button.module';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { DeferModule } from '../shared/defer/defer.module';
     ReactiveFormsModule,
     RatingModule,
     DeferModule,
+    ButtonModule,
     SvgIconsModule.forChild([])
   ],
   declarations: [

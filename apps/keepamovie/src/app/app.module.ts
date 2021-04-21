@@ -24,6 +24,7 @@ import { appSearchIcon } from '@app/svg/search';
 import { appMenuIcon } from '@app/svg/menu';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import * as Sentry from '@sentry/angular';
+import { ButtonModule } from './shared/button/button.module';
 
 const routes: Route[] = [
   {
@@ -69,6 +70,7 @@ const routes: Route[] = [
     BrowserModule,
     BrowserAnimationsModule,
     AkitaNgRouterStoreModule,
+    ButtonModule,
     RouterModule.forRoot(routes, {
       initialNavigation: 'enabled',
       relativeLinkResolution: 'legacy'

@@ -1,0 +1,11 @@
+<button
+  (click)='onClick()'
+  data-test-name='button'
+  class='h-8 w-full flex justify-center items-center text-xs font-sans text-gray-700 rounded shadow-md self-start px-4 py-1 my-2 focus:outline-none focus:ring-2 focus:ring-purple-600 transition duration-200'
+  [ngClass]="{'bg-yellow-400 hover:bg-yellow-600 hover:text-white': buttonType === 'primary',
+              'bg-gray-100 hover:bg-gray-300': buttonType === 'secondary',
+              'bg-red-400 hover:bg-red-600 hover:text-white': buttonType === 'warning'}"
+  [disabled]='disabled'>
+  <svg-icon *ngIf='icon' [key]='icon' class='mr-2' size='lg'></svg-icon>
+  <span data-test-name='text'>{{text}}</span>
+</button>

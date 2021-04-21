@@ -5,8 +5,9 @@ import { of, ReplaySubject } from 'rxjs';
 import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsService } from '../state/movies-lists.service';
 import { MoviesListCreateComponent } from './movies-list-create.component';
-import { getElementForTest } from '../../../test-utilities/test-functions';
+import { childComponents, getElementForTest } from '@test-utilities/test-functions';
 import { MockComponent } from 'ng-mocks';
+import { ButtonComponent } from '../../shared/button/button.component';
 import { SvgIconComponent } from '@ngneat/svg-icon';
 
 const errorStream = new ReplaySubject<string>(1);
@@ -29,7 +30,11 @@ describe('MoviesListCreateComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
-      declarations: [MoviesListCreateComponent, MockComponent(SvgIconComponent)],
+      declarations: [
+        MoviesListCreateComponent,
+        MockComponent(ButtonComponent),
+        MockComponent(SvgIconComponent)
+      ],
       providers: [
         {
           provide: MoviesListsService,
@@ -57,16 +62,23 @@ describe('MoviesListCreateComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  test('should show the create button', () => {
+    const createButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
+
+    expect(createButton.text).toBe('Create');
+    expect(createButton.buttonType).toBe('primary');
+  });
+
   test('should create the movies list', () => {
     const listNameToUse = 'batman stuff';
     const nameInput = getElementForTest(fixture, 'nameInput');
-    const createButton = getElementForTest(fixture, 'createButton');
+    const createButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
     jest.spyOn(moviesListService, 'add');
 
     nameInput.nativeElement.value = listNameToUse;
     nameInput.nativeElement.dispatchEvent(new Event('input'));
 
-    createButton.triggerEventHandler('click', null);
+    createButton.clicked.emit();
 
     expect(moviesListService.add).toHaveBeenCalledWith({
       name: listNameToUse
@@ -79,9 +91,9 @@ describe('MoviesListCreateComponent', () => {
       listName.setValue('batman stuff');
 
       fixture.detectChanges();
-      const createButton = getElementForTest(fixture, 'createButton');
+      const createButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
 
-      expect(createButton.nativeElement.disabled).toBeFalsy();
+      expect(createButton.disabled).toBe(false);
     });
 
     test('should be disabled if the form is invalid', () => {
@@ -89,9 +101,9 @@ describe('MoviesListCreateComponent', () => {
       listName.setValue('');
 
       fixture.detectChanges();
-      const createButton = getElementForTest(fixture, 'createButton');
+      const createButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
 
-      expect(createButton.nativeElement.disabled).toBeTruthy();
+      expect(createButton.disabled).toBe(true);
     });
   });
 

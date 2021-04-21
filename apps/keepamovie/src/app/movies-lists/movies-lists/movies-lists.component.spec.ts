@@ -12,6 +12,7 @@ import { MoviesListsService } from '../state/movies-lists.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MoviesListCreateComponent } from '../movies-list-create/movies-list-create.component';
 import { childComponents, getElementForTest } from '@test-utilities/test-functions';
+import { ButtonComponent } from '../../shared/button/button.component';
 import { SvgIconComponent } from '@ngneat/svg-icon';
 
 const selectedMoviesList = testMoviesLists[0];
@@ -40,6 +41,7 @@ describe('MoviesListsComponent', () => {
         MoviesListsComponent,
         MockComponent(MoviesListComponent),
         MockComponent(MoviesListCreateComponent),
+        MockComponent(ButtonComponent),
         MockComponent(SvgIconComponent)
       ],
       providers: [
@@ -167,13 +169,25 @@ describe('MoviesListsComponent', () => {
       expect(component.createListMode).toBe(false);
     });
 
+    test('should show the create new list button', () => {
+      moviesListsStream.next(testMoviesLists);
+      loadingStream.next(false);
+      fixture.detectChanges();
+
+      const newListButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
+
+      expect(newListButton.text).toBe('New list');
+      expect(newListButton.buttonType).toBe('primary');
+      expect(newListButton.icon).toBe('plus');
+    });
+
     test('should show the create new list component when the user wants to create a new list', () => {
       moviesListsStream.next(testMoviesLists);
       loadingStream.next(false);
       fixture.detectChanges();
 
-      const newListButton = getElementForTest(fixture, 'createButton');
-      newListButton.triggerEventHandler('click', null);
+      const newListButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
+      newListButton.clicked.emit();
 
       expect(component.createListMode).toBe(true);
     });

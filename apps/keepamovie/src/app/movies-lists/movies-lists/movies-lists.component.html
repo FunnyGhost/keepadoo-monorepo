@@ -23,15 +23,10 @@
       </ng-container>
       <ng-template #moviesListsTemplate>
         <div class='flex flex-col'>
-          <button
-            data-test-name='createButton'
-            (click)='createList()'
-            class='flex justify-center items-center text-xs font-sans text-gray-700 rounded bg-yellow-400 shadow-md self-start px-4 py-1 my-2 focus:outline-none focus:ring-2 focus:ring-purple-600 hover:bg-yellow-600 hover:text-white transition duration-200'>
-            <svg-icon key='plus' class='mr-2' size='lg'></svg-icon>
-            <span>
-              New list
-            </span>
-          </button>
+          <keepadoo-button class='w-32' icon='plus' text='New list'
+                           buttonType='primary'
+                           (clicked)='createList()'>
+          </keepadoo-button>
 
           <keepadoo-movies-list
             *ngFor='let moviesList of moviesLists'
