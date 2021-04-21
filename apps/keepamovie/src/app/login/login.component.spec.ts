@@ -7,8 +7,13 @@ import { SessionQuery } from '../state/session.query';
 import { LoginComponent } from './login.component';
 import { MockComponent } from 'ng-mocks';
 import { RouterLinkWithHref } from '@angular/router';
-import { getElementForTest, getElementsForTest } from '@test-utilities/test-functions';
+import {
+  childComponents,
+  getElementForTest,
+  getElementsForTest
+} from '@test-utilities/test-functions';
 import { SvgIconComponent } from '@ngneat/svg-icon';
+import { ButtonComponent } from '../shared/button/button.component';
 
 const queryMock = {
   error: new BehaviorSubject<string | null>(null),
@@ -36,7 +41,8 @@ describe('LoginComponent', () => {
       declarations: [
         LoginComponent,
         MockComponent(RouterLinkWithHref),
-        MockComponent(SvgIconComponent)
+        MockComponent(SvgIconComponent),
+        MockComponent(ButtonComponent)
       ],
       providers: [
         {
@@ -73,19 +79,27 @@ describe('LoginComponent', () => {
     const passwordToUse = 'HahahHahAHha';
     const emailInput = getElementForTest(fixture, 'emailInput');
     const passwordInput = getElementForTest(fixture, 'passwordInput');
-    const loginButton = getElementForTest(fixture, 'submitButton');
+    const loginButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
 
     emailInput.nativeElement.value = emailToUse;
     emailInput.nativeElement.dispatchEvent(new Event('input'));
     passwordInput.nativeElement.value = passwordToUse;
     passwordInput.nativeElement.dispatchEvent(new Event('input'));
 
-    loginButton.triggerEventHandler('click', null);
+    loginButton.clicked.emit();
 
     expect(authService.signIn).toHaveBeenCalledWith(emailToUse, passwordToUse);
   });
 
   describe('LoginButton', () => {
+    test('should show the login button', () => {
+      fixture.detectChanges();
+      const loginButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
+
+      expect(loginButton.text).toBe('Login');
+      expect(loginButton.buttonType).toBe('primary');
+    });
+
     test('should be enabled if the form is valid', () => {
       const email = component.loginForm.controls['email'];
       email.setValue('batman@gotham.dc');
@@ -93,9 +107,9 @@ describe('LoginComponent', () => {
       password.setValue('Hahahahhaahah');
 
       fixture.detectChanges();
-      const loginButton = getElementForTest(fixture, 'submitButton');
+      const loginButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
 
-      expect(loginButton.nativeElement.disabled).toBeFalsy();
+      expect(loginButton.disabled).toBe(false);
     });
 
     test('should be disabled if the form is invalid', () => {
@@ -103,9 +117,9 @@ describe('LoginComponent', () => {
       email.setValue('');
 
       fixture.detectChanges();
-      const loginButton = getElementForTest(fixture, 'submitButton');
+      const loginButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
 
-      expect(loginButton.nativeElement.disabled).toBeTruthy();
+      expect(loginButton.disabled).toBe(true);
     });
   });
 

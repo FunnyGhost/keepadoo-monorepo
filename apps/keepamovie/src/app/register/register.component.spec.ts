@@ -5,10 +5,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../state/auth.service';
 import { SessionQuery } from '../state/session.query';
 import { RegisterComponent } from './register.component';
-import { getElementForTest, getElementsForTest } from '@test-utilities/test-functions';
+import {
+  childComponents,
+  getElementForTest,
+  getElementsForTest
+} from '@test-utilities/test-functions';
 import { RouterLinkWithHref } from '@angular/router';
 import { MockComponent } from 'ng-mocks';
 import { SvgIconComponent } from '@ngneat/svg-icon';
+import { ButtonComponent } from '../shared/button/button.component';
 
 const queryMock = {
   error: new BehaviorSubject<string | null>(null),
@@ -36,7 +41,8 @@ describe('RegisterComponent', () => {
       declarations: [
         RegisterComponent,
         MockComponent(RouterLinkWithHref),
-        MockComponent(SvgIconComponent)
+        MockComponent(SvgIconComponent),
+        MockComponent(ButtonComponent)
       ],
       providers: [
         {
@@ -73,19 +79,27 @@ describe('RegisterComponent', () => {
     const passwordToUse = 'HahahHahAHha';
     const emailInput = getElementForTest(fixture, 'emailInput');
     const passwordInput = getElementForTest(fixture, 'passwordInput');
-    const registerButton = getElementForTest(fixture, 'submitButton');
+    const registerButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
 
     emailInput.nativeElement.value = emailToUse;
     emailInput.nativeElement.dispatchEvent(new Event('input'));
     passwordInput.nativeElement.value = passwordToUse;
     passwordInput.nativeElement.dispatchEvent(new Event('input'));
 
-    registerButton.triggerEventHandler('click', null);
+    registerButton.clicked.emit();
 
     expect(authService.signUp).toHaveBeenCalledWith(emailToUse, passwordToUse);
   });
 
   describe('RegisterButton', () => {
+    test('should show the register button', () => {
+      fixture.detectChanges();
+      const registerButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
+
+      expect(registerButton.text).toBe('Register');
+      expect(registerButton.buttonType).toBe('primary');
+    });
+
     test('should be enabled if the form is valid', () => {
       const email = component.registerForm.controls['email'];
       email.setValue('batman@gotham.dc');
@@ -93,9 +107,9 @@ describe('RegisterComponent', () => {
       password.setValue('Hahahahhaahah');
 
       fixture.detectChanges();
-      const registerButton = getElementForTest(fixture, 'submitButton');
+      const registerButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
 
-      expect(registerButton.nativeElement.disabled).toBeFalsy();
+      expect(registerButton.disabled).toBe(false);
     });
 
     test('should be disabled if the form is invalid', () => {
@@ -103,9 +117,9 @@ describe('RegisterComponent', () => {
       email.setValue('');
 
       fixture.detectChanges();
-      const registerButton = getElementForTest(fixture, 'submitButton');
+      const registerButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
 
-      expect(registerButton.nativeElement.disabled).toBeTruthy();
+      expect(registerButton.disabled).toBe(true);
     });
   });
 
