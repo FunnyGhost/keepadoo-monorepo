@@ -123,6 +123,24 @@ describe('MoviesListDetailsComponent', () => {
   });
 
   describe('Render', () => {
+    test('should show the helper message if there are no movies in the selected list', () => {
+      allMoviesStream.next([]);
+
+      fixture.detectChanges();
+
+      const helperMessage = getElementForTest(fixture, 'noMoviesHelperMessage');
+      expect(helperMessage).toBeTruthy();
+    });
+
+    test('should not show the helper message if there are movies in the selected list', () => {
+      allMoviesStream.next(testMovies);
+
+      fixture.detectChanges();
+
+      const helperMessage = getElementForTest(fixture, 'noMoviesHelperMessage');
+      expect(helperMessage).toBeFalsy();
+    });
+
     test('should show the movies in store', () => {
       allMoviesStream.next(testMovies);
 

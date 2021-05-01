@@ -1,7 +1,7 @@
 <div>
   <ng-container *ngIf='isLoading$ | async; else moviesTemplate'>
     <div class='flex justify-center items-center'>
-      <svg-icon data-test-name='loading' class='w-24 h-24' key='loading'></svg-icon>
+      <svg-icon data-test-name='loading' class='w-14 h-14' key='loading'></svg-icon>
     </div>
   </ng-container>
   <ng-template #moviesTemplate>
@@ -42,11 +42,11 @@
         [editMode]='editMode$ | async'
         (delete)='deleteMovie($event)'
       ></keepadoo-movie>
-      <section *ngIf='movies.length === 0'>
-        <span
-        >Please use the
-          button bellow to add your first movie to this list. Magical!</span
-        >
+      <section *ngIf='movies.length === 0' data-test-name='noMoviesHelperMessage'
+               class='w-full col-span-2 md:text-right px-2 md:px-0'>
+        <span class='font-sans text-sm text-gray-600'>
+          Please use the button above to add your first movie to this list. Magical!
+        </span>
       </section>
     </section>
 
@@ -75,7 +75,7 @@
 </div>
 
 <section
-  class='absolute shadow rounded-md top-0 left-0 z-10 w-full h-full transition transform origin-bottom duration-500 bg-white'
+  class='absolute shadow rounded-md top-0 left-0 z-10 w-full h-full transition transform origin-bottom duration-200 bg-white'
   [ngClass]="{'translate-y-0 scale-y-100': addMovieMode, 'translate-y-full scale-y-0': !addMovieMode}">
   <keepadoo-movie-search (done)='disableAddMode()'></keepadoo-movie-search>
 </section>

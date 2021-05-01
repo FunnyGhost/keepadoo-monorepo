@@ -68,6 +68,24 @@ describe('MoviesListsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  test('should show the helper message if there are no movies lists', () => {
+    moviesListsStream.next([]);
+
+    fixture.detectChanges();
+
+    const helperMessage = getElementForTest(fixture, 'noMoviesListsHelperMessage');
+    expect(helperMessage).toBeTruthy();
+  });
+
+  test('should not show the helper message if there are movies lists', () => {
+    moviesListsStream.next(testMoviesLists);
+
+    fixture.detectChanges();
+
+    const helperMessage = getElementForTest(fixture, 'noMoviesListsHelperMessage');
+    expect(helperMessage).toBeFalsy();
+  });
+
   test('should show all lists', () => {
     moviesListsStream.next(testMoviesLists);
     loadingStream.next(false);
