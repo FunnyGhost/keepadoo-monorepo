@@ -42,11 +42,11 @@
         [editMode]='editMode$ | async'
         (delete)='deleteMovie($event)'
       ></keepadoo-movie>
-      <section *ngIf='movies.length === 0'>
-        <span
-        >Please use the
-          button bellow to add your first movie to this list. Magical!</span
-        >
+      <section *ngIf='movies.length === 0' data-test-name='noMoviesHelperMessage'
+               class='w-full col-span-2 md:text-right px-2 md:px-0'>
+        <span class='font-sans text-sm text-gray-600'>
+          Please use the button above to add your first movie to this list. Magical!
+        </span>
       </section>
     </section>
 
