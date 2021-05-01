@@ -3,7 +3,7 @@
         [formGroup]='loginForm'
         (ngSubmit)='onSubmit()'>
     <div *ngIf='(loading$ | async) === true' class='flex justify-center items-center'>
-      <svg-icon data-test-name='loading' class='w-24 h-24' key='loading'></svg-icon>
+      <svg-icon data-test-name='loading' class='w-14 h-14' key='loading'></svg-icon>
     </div>
 
     <img class='self-center h-16 object-contain' src='assets/logo.png' alt='Keepadoo logo' />

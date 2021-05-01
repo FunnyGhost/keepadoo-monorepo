@@ -18,7 +18,7 @@
     <ng-container *ngIf='moviesLists$ | async; let moviesLists'>
       <ng-container *ngIf='isLoading$ | async; else moviesListsTemplate'>
         <div class='flex justify-center items-center'>
-          <svg-icon data-test-name='loading' class='w-24 h-24' key='loading'></svg-icon>
+          <svg-icon data-test-name='loading' class='w-14 h-14' key='loading'></svg-icon>
         </div>
       </ng-container>
       <ng-template #moviesListsTemplate>
