@@ -14,6 +14,7 @@ import { MoviesListCreateComponent } from '../movies-list-create/movies-list-cre
 import { childComponents, getElementForTest } from '@test-utilities/test-functions';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { SvgIconComponent } from '@ngneat/svg-icon';
+import { SlideUpComponent } from '../../shared/slide-up/slide-up.component';
 
 const selectedMoviesList = testMoviesLists[0];
 const moviesListsStream = new ReplaySubject<MoviesList[]>();
@@ -42,6 +43,7 @@ describe('MoviesListsComponent', () => {
         MockComponent(MoviesListComponent),
         MockComponent(MoviesListCreateComponent),
         MockComponent(ButtonComponent),
+        MockComponent(SlideUpComponent),
         MockComponent(SvgIconComponent)
       ],
       providers: [

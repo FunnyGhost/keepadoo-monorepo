@@ -18,6 +18,7 @@ import { MovieSearchComponent } from '../movie-search/movie-search.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { SvgIconComponent } from '@ngneat/svg-icon';
+import { SlideUpComponent } from '../../shared/slide-up/slide-up.component';
 
 describe('MoviesListDetailsComponent', () => {
   let component: MoviesListDetailsComponent;
@@ -69,6 +70,7 @@ describe('MoviesListDetailsComponent', () => {
         MockComponent(MovieSearchComponent),
         MockComponent(DialogComponent),
         MockComponent(ButtonComponent),
+        MockComponent(SlideUpComponent),
         MockComponent(SvgIconComponent)
       ],
       providers: [

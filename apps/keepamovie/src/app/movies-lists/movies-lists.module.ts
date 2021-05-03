@@ -14,6 +14,7 @@ import { RatingModule } from '../shared/rating/rating.module';
 import { SvgIconsModule } from '@ngneat/svg-icon';
 import { DeferModule } from '../shared/defer/defer.module';
 import { ButtonModule } from '../shared/button/button.module';
+import { SlideUpModule } from '../shared/slide-up/slide-up.module';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { ButtonModule } from '../shared/button/button.module';
     RatingModule,
     DeferModule,
     ButtonModule,
+    SlideUpModule,
     SvgIconsModule.forChild([])
   ],
   declarations: [
