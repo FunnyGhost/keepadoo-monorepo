@@ -50,10 +50,8 @@
     </router-outlet>
   </section>
 
-  <section
-    class='absolute shadow rounded-md top-0 left-0 z-10 w-full h-full transition transform origin-bottom duration-200 bg-white'
-    [ngClass]="{'translate-y-0 scale-y-100': createListMode, 'translate-y-full scale-y-0': !createListMode}">
+  <keepadoo-slide-up [visible]='createListMode'>
     <keepadoo-movies-list-create (done)='doneCreatingList()'></keepadoo-movies-list-create>
-  </section>
+  </keepadoo-slide-up>
 </div>
 
