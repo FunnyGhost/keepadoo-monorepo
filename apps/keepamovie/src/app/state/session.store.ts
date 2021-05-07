@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Store, StoreConfig } from '@datorama/akita';
+import { resetStores, Store, StoreConfig } from '@datorama/akita';
 import { createInitialState, createSession, SessionState } from './models/session-state';
 import { User } from './models/user';
 
@@ -17,6 +17,6 @@ export class SessionStore extends Store<SessionState> {
   }
 
   logout(): void {
-    this.update(createInitialState());
+    resetStores();
   }
 }

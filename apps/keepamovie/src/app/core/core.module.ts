@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { environment } from '../../environments/environment';
 
@@ -14,7 +13,6 @@ import { environment } from '../../environments/environment';
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    AngularFirePerformanceModule,
     HttpClientModule
   ]
 })

@@ -25,6 +25,9 @@ import { appMenuIcon } from '@app/svg/menu';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import * as Sentry from '@sentry/angular';
 import { ButtonModule } from './shared/button/button.module';
+import { akitaConfig } from '@datorama/akita';
+
+akitaConfig({ resettable: true });
 
 const routes: Route[] = [
   {
@@ -73,7 +76,8 @@ const routes: Route[] = [
     ButtonModule,
     RouterModule.forRoot(routes, {
       initialNavigation: 'enabled',
-      relativeLinkResolution: 'legacy'
+      relativeLinkResolution: 'legacy',
+      scrollPositionRestoration: 'top'
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,

@@ -1,5 +1,4 @@
-import { testUser } from '../../test-utilities/test-objects';
-import { createInitialState } from './models/session-state';
+import { testUser } from '@test-utilities/test-objects';
 import { SessionStore } from './session.store';
 
 describe('SessionStore', () => {
@@ -20,15 +19,5 @@ describe('SessionStore', () => {
     store.login(inputUser);
 
     expect(store.update).toHaveBeenCalledWith({ user: inputUser });
-  });
-
-  describe('logout', () => {
-    test('should reset the session state', () => {
-      jest.spyOn(store, 'update');
-
-      store.logout();
-
-      expect(store.update).toHaveBeenCalledWith(createInitialState());
-    });
   });
 });

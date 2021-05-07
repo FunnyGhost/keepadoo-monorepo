@@ -28,15 +28,11 @@ export class MoviesListsService {
     this.sessionSubscription = this.sessionQuery.userId$
       .pipe(
         switchMap((userId) => {
-          if (userId) {
-            this.setupMoviesListsCollection(this.firestoreService, userId);
-            return this.moviesListsCollection.valueChanges({ idField: 'id' });
-          }
-
-          return of([]);
+          this.setupMoviesListsCollection(this.firestoreService, userId);
+          return this.moviesListsCollection.valueChanges({ idField: 'id' });
         })
       )
-      .subscribe((moviesLists) => {
+      .subscribe((moviesLists: MoviesList[]) => {
         this.moviesListsStore.set(moviesLists);
       });
   }

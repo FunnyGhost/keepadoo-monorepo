@@ -1,11 +1,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { of, ReplaySubject } from 'rxjs';
-import {
-  testMovieSearchResults,
-  testMoviesLists,
-  testUser
-} from '../../../test-utilities/test-objects';
+import { testMovieSearchResults, testMoviesLists, testUser } from '@test-utilities/test-objects';
 import { SessionQuery } from '../../state/session.query';
 import { MoviesService } from '../movies/state/movies.service';
 import { MoviesList } from './models/movies-list';
@@ -134,17 +130,6 @@ describe('MoviesListsService', () => {
 
       expect(firestoreMockSpy).toHaveBeenCalledWith('movies-lists', expect.any(Function));
       expect(moviesListsStore.set).toHaveBeenCalledWith(testMoviesLists);
-    });
-
-    test('should clear the store if the user logs out', () => {
-      jest.spyOn(moviesListsStore, 'set');
-      spyOn(firestoreMock, 'collection').and.callThrough();
-      userIdStream.next('');
-
-      sut.initialize();
-
-      expect(firestoreMockSpy).not.toHaveBeenCalledWith('movies-lists', expect.any(Function));
-      expect(moviesListsStore.set).toHaveBeenCalledWith([]);
     });
   });
 
