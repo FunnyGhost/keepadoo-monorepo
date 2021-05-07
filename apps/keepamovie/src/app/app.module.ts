@@ -73,7 +73,8 @@ const routes: Route[] = [
     ButtonModule,
     RouterModule.forRoot(routes, {
       initialNavigation: 'enabled',
-      relativeLinkResolution: 'legacy'
+      relativeLinkResolution: 'legacy',
+      scrollPositionRestoration: 'top'
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
