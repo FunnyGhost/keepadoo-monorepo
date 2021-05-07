@@ -25,6 +25,9 @@ import { appMenuIcon } from '@app/svg/menu';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import * as Sentry from '@sentry/angular';
 import { ButtonModule } from './shared/button/button.module';
+import { akitaConfig } from '@datorama/akita';
+
+akitaConfig({ resettable: true });
 
 const routes: Route[] = [
   {
