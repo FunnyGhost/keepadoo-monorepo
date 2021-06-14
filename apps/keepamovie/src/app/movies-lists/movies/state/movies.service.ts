@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { combineLatest, from, Observable, of, Subscription } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, mergeMap, reduce, switchMap, take } from 'rxjs/operators';
 import { SessionQuery } from '../../../state/session.query';
 import { MovieSearchResult } from '../../movie-search/state/models/movie-search-results';
 import { MoviesList } from '../../state/models/movies-list';
@@ -70,14 +70,21 @@ export class MoviesService {
     });
   }
 
-  public deleteMoviesInList(listId: string): Observable<void> {
+  public deleteMoviesInList(listId: string): Observable<boolean> {
     return this.firestoreService
       .collection(`movies`, (ref) => ref.where('listId', '==', listId))
       .snapshotChanges()
       .pipe(
         take(1),
-        switchMap((data) => from(data)),
-        switchMap((item) => item.payload.doc.ref.delete())
+        switchMap((data) => {
+          if (data.length)
+            return from(data).pipe(
+              mergeMap((item) => item.payload.doc.ref.delete()),
+              reduce(() => undefined)
+            );
+
+          return of(true);
+        })
       );
   }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { EMPTY, from, of, Subscription } from 'rxjs';
+import { EMPTY, from, Subscription } from 'rxjs';
 import { SessionQuery } from '../../state/session.query';
 import { MovieSearchResult } from '../movie-search/state/models/movie-search-results';
 import { MoviesService } from '../movies/state/movies.service';
@@ -82,13 +82,16 @@ export class MoviesListsService {
     this.moviesListsStore.setLoading(true);
     this.moviesService
       .deleteMoviesInList(id)
-      .pipe(switchMap(() => this.moviesListsCollection.doc(id).delete()))
-      .subscribe(() => {
-        this.moviesListsStore.setLoading(false);
-        this.toast.success('List deleted!', {
-          duration: 3000
-        });
-      });
+      .pipe(
+        switchMap(() => this.moviesListsCollection.doc(id).delete()),
+        finalize(() => {
+          this.moviesListsStore.setLoading(false);
+          this.toast.success('List deleted!', {
+            duration: 3000
+          });
+        })
+      )
+      .subscribe();
   }
 
   setActive(id: string): void {
@@ -108,15 +111,15 @@ export class MoviesListsService {
     });
   }
 
+  destroy(): void {
+    this.sessionSubscription.unsubscribe();
+  }
+
   private setupMoviesListsCollection(firestoreService: AngularFirestore, userId: string): void {
     this.moviesListsCollection = firestoreService.collection(
       `movies-lists`,
       /* istanbul ignore next */
       (ref) => ref.where('userId', '==', userId)
     );
-  }
-
-  destroy(): void {
-    this.sessionSubscription.unsubscribe();
   }
 }
