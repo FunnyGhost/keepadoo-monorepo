@@ -388,6 +388,22 @@ describe('MoviesListDetailsComponent', () => {
       expect(component.addMovieMode).toBe(true);
     });
 
+    test('should focus the search movie component when the user wants to search for a movie', () => {
+      loadingStream.next(false);
+      fixture.detectChanges();
+
+      const movieSearchComponent = childComponents<MovieSearchComponent>(
+        fixture,
+        MovieSearchComponent
+      )[0];
+      jest.spyOn(movieSearchComponent, 'focusInput');
+      const addButton = getElementForTest(fixture, 'addModeButton')
+        .componentInstance as ButtonComponent;
+      addButton.clicked.emit();
+
+      expect(movieSearchComponent.focusInput).toHaveBeenCalled();
+    });
+
     test('should dismiss the search movie component when the user is done with that', () => {
       loadingStream.next(false);
       fixture.detectChanges();

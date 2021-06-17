@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, ReplaySubject } from 'rxjs';
 import { MoviesListsQuery } from '../state/movies-lists.query';
@@ -83,6 +83,18 @@ describe('MoviesListCreateComponent', () => {
     expect(moviesListService.add).toHaveBeenCalledWith({
       name: listNameToUse
     });
+  });
+
+  describe('focusInput', () => {
+    test('should focus the input with a 500ms delay', fakeAsync(() => {
+      const focusSpy = jest.spyOn(component.inputElement.nativeElement, 'focus');
+
+      component.focusInput();
+      expect(focusSpy).not.toHaveBeenCalled();
+
+      tick(500);
+      expect(focusSpy).toHaveBeenCalled();
+    }));
   });
 
   describe('CreateButton', () => {
