@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsService } from '../state/movies-lists.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { MovieSearchComponent } from '../movie-search/movie-search.component';
 
 @UntilDestroy()
 @Component({
@@ -25,6 +26,8 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
 
   showConfirmationDialog: boolean;
   addMovieMode = false;
+
+  @ViewChild(MovieSearchComponent) searchComponent: MovieSearchComponent;
 
   constructor(
     private routerQuery: RouterQuery,
@@ -53,6 +56,7 @@ export class MoviesListDetailsComponent implements OnInit, OnDestroy {
 
   enableAddMode(): void {
     this.addMovieMode = true;
+    this.searchComponent.focusInput();
   }
 
   disableAddMode(): void {

@@ -212,6 +212,22 @@ describe('MoviesListsComponent', () => {
       expect(component.createListMode).toBe(true);
     });
 
+    test('should focus the create component when the user wants to create a new list', () => {
+      moviesListsStream.next(testMoviesLists);
+      loadingStream.next(false);
+      fixture.detectChanges();
+
+      const createListComponent = childComponents<MoviesListCreateComponent>(
+        fixture,
+        MoviesListCreateComponent
+      )[0];
+      jest.spyOn(createListComponent, 'focusInput');
+      const newListButton = childComponents<ButtonComponent>(fixture, ButtonComponent)[0];
+      newListButton.clicked.emit();
+
+      expect(createListComponent.focusInput).toHaveBeenCalled();
+    });
+
     test('should dismiss the create list component when the user is done with that', () => {
       moviesListsStream.next(testMoviesLists);
       loadingStream.next(false);
