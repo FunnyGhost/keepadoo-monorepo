@@ -4,6 +4,7 @@ import { ButtonComponent } from './button.component';
 import { MockComponent } from 'ng-mocks';
 import { SvgIconComponent } from '@ngneat/svg-icon';
 import { childComponents, getElementForTest } from '@test-utilities/test-functions';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 describe('ButtonComponent', () => {
   let component: ButtonComponent;
@@ -12,6 +13,8 @@ describe('ButtonComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ButtonComponent, MockComponent(SvgIconComponent)]
+    }).overrideComponent(ButtonComponent, {
+      set: { changeDetection: ChangeDetectionStrategy.Default }
     });
   });
 
