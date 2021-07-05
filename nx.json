@@ -1,23 +1,47 @@
 {
   "implicitDependencies": {
     "workspace.json": "*",
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
     "tsconfig.base.json": "*",
     "tslint.json": "*",
     ".eslintrc.json": "*",
     "nx.json": "*"
   },
-  "affected": { "defaultBase": "main" },
+  "affected": {
+    "defaultBase": "main"
+  },
   "npmScope": "keepadoo",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
+        "accessToken": "YjI3NDRlMzItZGYwZi00YTQxLWIzM2QtNmI1MTU2MTkzMDk3fHJlYWQtd3JpdGU=",
+        "canTrackAnalytics": false,
+        "showUsageWarnings": true
+      }
     }
   },
   "projects": {
-    "keepamovie": { "tags": [] },
-    "keepamovie-e2e": { "tags": [], "implicitDependencies": ["keepamovie"] },
-    "functions": { "tags": [] }
+    "keepamovie": {
+      "tags": []
+    },
+    "keepamovie-e2e": {
+      "tags": [],
+      "implicitDependencies": [
+        "keepamovie"
+      ]
+    },
+    "functions": {
+      "tags": []
+    }
   }
 }
