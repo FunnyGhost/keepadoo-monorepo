@@ -56,7 +56,7 @@ describe('MovieComponent', () => {
       const movieReleaseDate = getElementForTest(fixture, 'movieReleaseDate');
 
       expect(movieReleaseDate.nativeElement.textContent).toContain(
-        movieToUse.release_date.getFullYear()
+        movieToUse.release_date.getFullYear().toString()
       );
     });
 

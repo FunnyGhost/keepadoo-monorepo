@@ -37,7 +37,7 @@ describe('MoviesListComponent', () => {
     test('should show the list size', () => {
       const sizeElement = getElementForTest(fixture, 'listCount');
 
-      expect(sizeElement.nativeElement.innerHTML).toContain(listToUse.moviesCount);
+      expect(sizeElement.nativeElement.innerHTML).toContain(listToUse.moviesCount.toString());
     });
 
     test('should show the last movies in list', () => {

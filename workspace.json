@@ -21,6 +21,49 @@
     }
   },
   "projects": {
+    "functions": {
+      "root": "apps/functions",
+      "sourceRoot": "apps/functions/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/functions",
+            "main": "apps/functions/src/main.ts",
+            "tsConfig": "apps/functions/tsconfig.app.json"
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "functions:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/functions/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/functions"],
+          "options": {
+            "jestConfig": "apps/functions/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "keepamovie": {
       "projectType": "application",
       "root": "apps/keepamovie",
@@ -36,13 +79,8 @@
             "polyfills": "apps/keepamovie/src/polyfills.ts",
             "tsConfig": "apps/keepamovie/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/keepamovie/src/favicon.ico",
-              "apps/keepamovie/src/assets"
-            ],
-            "styles": [
-              "apps/keepamovie/src/styles.css"
-            ],
+            "assets": ["apps/keepamovie/src/favicon.ico", "apps/keepamovie/src/assets"],
+            "styles": ["apps/keepamovie/src/styles.css"],
             "scripts": [],
             "customWebpackConfig": {
               "path": "webpack.config.js"
@@ -98,17 +136,12 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/keepamovie/src/**/*.ts",
-              "apps/keepamovie/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/keepamovie/src/**/*.ts", "apps/keepamovie/src/**/*.html"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/keepamovie"
-          ],
+          "outputs": ["coverage/apps/keepamovie"],
           "options": {
             "jestConfig": "apps/keepamovie/jest.config.js",
             "passWithNoTests": true
@@ -137,58 +170,7 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/keepamovie-e2e/**/*.{js,ts}"
-            ]
-          }
-        }
-      }
-    },
-    "functions": {
-      "root": "apps/functions",
-      "sourceRoot": "apps/functions/src",
-      "projectType": "application",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
-          "options": {
-            "outputPath": "dist/apps/functions",
-            "main": "apps/functions/src/main.ts",
-            "tsConfig": "apps/functions/tsconfig.app.json"
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "functions:build"
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "apps/functions/**/*.ts"
-            ]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/functions"
-          ],
-          "options": {
-            "jestConfig": "apps/functions/jest.config.js",
-            "passWithNoTests": true
+            "lintFilePatterns": ["apps/keepamovie-e2e/**/*.{js,ts}"]
           }
         }
       }

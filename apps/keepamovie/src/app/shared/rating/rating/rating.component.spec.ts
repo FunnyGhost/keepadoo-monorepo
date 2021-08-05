@@ -37,6 +37,6 @@ describe('RatingComponent', () => {
   test('should show the rating', () => {
     const ratingElement = getElementForTest(fixture, 'rating');
 
-    expect(ratingElement.nativeElement.textContent).toContain(ratingToUse);
+    expect(ratingElement.nativeElement.textContent).toContain(ratingToUse.toString());
   });
 });
