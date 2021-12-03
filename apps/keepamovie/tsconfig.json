@@ -2,6 +2,10 @@
   "extends": "../../tsconfig.base.json",
   "files": [],
   "include": [],
+  "paths": {
+    "@app/svg/*": ["apps/keepamovie/src/app/svg/*"],
+    "@test-utilities/*": ["apps/keepamovie/src/test-utilities/*"]
+  },
   "references": [
     {
       "path": "./tsconfig.app.json"
