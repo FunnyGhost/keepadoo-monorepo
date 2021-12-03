@@ -5,15 +5,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../state/auth.service';
 import { SessionQuery } from '../state/session.query';
 import { RegisterComponent } from './register.component';
-import {
-  childComponents,
-  getElementForTest,
-  getElementsForTest
-} from '@test-utilities/test-functions';
 import { RouterLinkWithHref } from '@angular/router';
 import { MockComponent } from 'ng-mocks';
 import { SvgIconComponent } from '@ngneat/svg-icon';
 import { ButtonComponent } from '../shared/button/button.component';
+import {
+  childComponents,
+  getElementForTest,
+  getElementsForTest
+} from '../../test-utilities/test-functions';
 
 const queryMock = {
   error: new BehaviorSubject<string | null>(null),

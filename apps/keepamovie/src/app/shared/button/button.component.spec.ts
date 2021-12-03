@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ButtonComponent } from './button.component';
 import { MockComponent } from 'ng-mocks';
 import { SvgIconComponent } from '@ngneat/svg-icon';
-import { childComponents, getElementForTest } from '@test-utilities/test-functions';
 import { ChangeDetectionStrategy } from '@angular/core';
+import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
 
 describe('ButtonComponent', () => {
   let component: ButtonComponent;

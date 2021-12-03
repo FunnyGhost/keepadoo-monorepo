@@ -1,5 +1,5 @@
-import { testUser } from '@test-utilities/test-objects';
 import { SessionStore } from './session.store';
+import { testUser } from '../../test-utilities/test-objects';
 
 describe('SessionStore', () => {
   let store: SessionStore;

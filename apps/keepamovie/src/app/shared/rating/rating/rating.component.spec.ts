@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RatingComponent } from './rating.component';
 import { MockComponent } from 'ng-mocks';
 import { SvgIconComponent } from '@ngneat/svg-icon';
-import { childComponents, getElementForTest } from '@test-utilities/test-functions';
+import { childComponents, getElementForTest } from '../../../../test-utilities/test-functions';
 
 describe('RatingComponent', () => {
   let component: RatingComponent;

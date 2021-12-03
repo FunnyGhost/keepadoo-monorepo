@@ -3,8 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MockComponent } from 'ng-mocks';
 import { of, ReplaySubject } from 'rxjs';
-import { childComponents, getElementForTest } from '@test-utilities/test-functions';
-import { testMovies, testMoviesLists } from '@test-utilities/test-objects';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { MovieComponent } from '../movie/movie.component';
 import { MoviesQuery } from '../movies/state/movies.query';
@@ -19,6 +17,8 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { SvgIconComponent } from '@ngneat/svg-icon';
 import { SlideUpComponent } from '../../shared/slide-up/slide-up.component';
+import { testMovies, testMoviesLists } from '../../../test-utilities/test-objects';
+import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
 
 describe('MoviesListDetailsComponent', () => {
   let component: MoviesListDetailsComponent;

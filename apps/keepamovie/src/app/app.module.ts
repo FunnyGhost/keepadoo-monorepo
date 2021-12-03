@@ -13,19 +13,19 @@ import { RegisterComponent } from './register/register.component';
 import { DialogModule } from './shared/dialog/dialog.module';
 import { AuthGuard } from './state/auth.guard';
 import { HotToastModule } from '@ngneat/hot-toast';
-import { SvgIconsModule } from '@ngneat/svg-icon';
-import { appPlusIcon } from './svg/plus';
-import { appCloseIcon } from './svg/close';
-import { appStarIcon } from '@app/svg/star';
-import { appLogoutIcon } from '@app/svg/logout';
-import { appTrashIcon } from '@app/svg/trash';
-import { appLoadingIcon } from '@app/svg/loading';
-import { appSearchIcon } from '@app/svg/search';
-import { appMenuIcon } from '@app/svg/menu';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import * as Sentry from '@sentry/angular';
 import { ButtonModule } from './shared/button/button.module';
+import { SvgIconsModule } from '@ngneat/svg-icon';
 import { akitaConfig } from '@datorama/akita';
+import { appStarIcon } from './svg/star';
+import { appLoadingIcon } from './svg/loading';
+import { appPlusIcon } from './svg/plus';
+import { appCloseIcon } from './svg/close';
+import { appLogoutIcon } from './svg/logout';
+import { appMenuIcon } from './svg/menu';
+import { appSearchIcon } from './svg/search';
+import { appTrashIcon } from './svg/trash';
 
 akitaConfig({ resettable: true });
 
