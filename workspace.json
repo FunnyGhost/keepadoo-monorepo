@@ -28,7 +28,7 @@
       "prefix": "keepadoo",
       "targets": {
         "build": {
-          "executor": "@angular-builders/custom-webpack:browser",
+          "executor": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/apps/keepamovie",
             "index": "apps/keepamovie/src/index.html",
@@ -43,10 +43,7 @@
             "styles": [
               "apps/keepamovie/src/styles.css"
             ],
-            "scripts": [],
-            "customWebpackConfig": {
-              "path": "webpack.config.js"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -79,7 +76,7 @@
           }
         },
         "serve": {
-          "executor": "@angular-builders/custom-webpack:dev-server",
+          "executor": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "keepamovie:build"
           },
