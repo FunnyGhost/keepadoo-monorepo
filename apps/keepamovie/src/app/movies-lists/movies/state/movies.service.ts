@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, from, Observable, of, Subscription } from 'rxjs';
-import { map, mergeMap, reduce, switchMap, take } from 'rxjs/operators';
+import { concatAll, mapTo, mergeMap, switchMap, take, toArray } from 'rxjs/operators';
 import { SessionQuery } from '../../../state/session.query';
 import { MovieSearchResult } from '../../movie-search/state/models/movie-search-results';
 import { MoviesList } from '../../state/models/movies-list';
@@ -8,14 +8,24 @@ import { MoviesListsQuery } from '../../state/movies-lists.query';
 import { Movie } from './models/movie';
 import { MoviesStore } from './movies.store';
 import { HotToastService } from '@ngneat/hot-toast';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  deleteDoc,
+  doc,
+  Firestore,
+  orderBy,
+  query,
+  where
+} from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class MoviesService {
   private setupSubscription: Subscription;
 
   constructor(
-    private firestoreService: AngularFirestore,
+    private readonly firestore: Firestore,
     private sessionQuery: SessionQuery,
     private moviesListsQuery: MoviesListsQuery,
     private moviesStore: MoviesStore,
@@ -44,26 +54,32 @@ export class MoviesService {
   }
 
   public getMoviesInList(listId: string): Observable<Movie[]> {
-    return this.firestoreService
-      .collection<Movie[]>(
-        `movies`,
-        /* istanbul ignore next */
-        (ref) => ref.where('listId', '==', listId).orderBy('added_on', 'desc')
-      )
-      .valueChanges({ idField: 'key' })
-      .pipe(map((data) => data as unknown as Movie[]));
+    const moviesCollection = collection(this.firestore, `movies`).withConverter<Movie>({
+      fromFirestore: (snapshot) => {
+        const movie = snapshot.data();
+        const key = snapshot.id;
+        return { key, ...movie } as Movie;
+      },
+      // TODO unused can we make implicit?
+      toFirestore: (it) => it
+    });
+    const userMoviesListsQuery = query(
+      moviesCollection,
+      where('listId', '==', listId),
+      orderBy('added_on', 'desc')
+    );
+
+    return collectionData(userMoviesListsQuery);
   }
 
   public addMovieToList(listId: string, movie: MovieSearchResult) {
-    const addedOn = new Date().toISOString();
-    return from(
-      this.firestoreService.collection(`movies`).add({ ...movie, listId, added_on: addedOn })
-    );
+    const added_on = new Date().toISOString();
+    return from(addDoc(collection(this.firestore, `movies`), { ...movie, listId, added_on }));
   }
 
   public deleteMovie(movie: Movie) {
-    const movieToDelete = this.firestoreService.collection(`movies`).doc(movie.key);
-    from(movieToDelete.delete()).subscribe(() => {
+    const movieToDelete = doc(this.firestore, 'movies', movie.key);
+    from(deleteDoc(movieToDelete)).subscribe(() => {
       this.notificationService.success('Movie deleted!', {
         duration: 3000
       });
@@ -71,21 +87,24 @@ export class MoviesService {
   }
 
   public deleteMoviesInList(listId: string): Observable<boolean> {
-    return this.firestoreService
-      .collection(`movies`, (ref) => ref.where('listId', '==', listId))
-      .snapshotChanges()
-      .pipe(
-        take(1),
-        switchMap((data) => {
-          if (data.length)
-            return from(data).pipe(
-              mergeMap((item) => item.payload.doc.ref.delete()),
-              reduce(() => undefined)
-            );
+    const moviesCollection = collection(this.firestore, `movies`).withConverter<Movie>({
+      fromFirestore: (snapshot) => {
+        const movie = snapshot.data();
+        const key = snapshot.id;
+        return { key, ...movie } as Movie;
+      },
+      // TODO unused can we make implicit?
+      toFirestore: (it) => it
+    });
+    const moviesToDeleteQuery = query(moviesCollection, where('listId', '==', listId));
 
-          return of(true);
-        })
-      );
+    return collectionData(moviesToDeleteQuery).pipe(
+      take(1),
+      concatAll(),
+      mergeMap((data: Movie) => deleteDoc(doc(this.firestore, 'movies', data.key))),
+      toArray(),
+      mapTo(true)
+    );
   }
 
   public enableEditMode(): void {

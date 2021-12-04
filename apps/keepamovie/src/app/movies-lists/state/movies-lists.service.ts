@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EMPTY, from, Subscription } from 'rxjs';
+import { EMPTY, from, Observable, Subscription } from 'rxjs';
 import { SessionQuery } from '../../state/session.query';
 import { MovieSearchResult } from '../movie-search/state/models/movie-search-results';
 import { MoviesService } from '../movies/state/movies.service';
@@ -8,17 +8,26 @@ import { MoviesListsQuery } from './movies-lists.query';
 import { MoviesListsStore } from './movies-lists.store';
 import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  deleteDoc,
+  doc,
+  Firestore,
+  query,
+  updateDoc,
+  where
+} from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class MoviesListsService {
-  private moviesListsCollection: AngularFirestoreCollection;
   private sessionSubscription: Subscription;
 
   constructor(
     private moviesListsQuery: MoviesListsQuery,
     private moviesListsStore: MoviesListsStore,
-    private firestoreService: AngularFirestore,
+    private readonly firestore: Firestore,
     private sessionQuery: SessionQuery,
     private moviesService: MoviesService,
     private toast: HotToastService
@@ -26,12 +35,7 @@ export class MoviesListsService {
 
   initialize(): void {
     this.sessionSubscription = this.sessionQuery.userId$
-      .pipe(
-        switchMap((userId) => {
-          this.setupMoviesListsCollection(this.firestoreService, userId);
-          return this.moviesListsCollection.valueChanges({ idField: 'id' });
-        })
-      )
+      .pipe(switchMap((userId) => this.setupMoviesListsCollection(userId)))
       .subscribe((moviesLists: MoviesList[]) => {
         this.moviesListsStore.set(moviesLists);
       });
@@ -40,16 +44,14 @@ export class MoviesListsService {
   add(moviesList: Partial<MoviesList>) {
     this.moviesListsStore.setLoading(true);
     const userId = this.sessionQuery.userId();
-    const id = this.firestoreService.createId();
     const list = {
       ...moviesList,
-      id,
       userId,
       moviesCount: 0,
       recentMovies: []
     } as MoviesList;
 
-    from(this.moviesListsCollection.doc(id).set(list))
+    from(addDoc(collection(this.firestore, `movies-lists`), list))
       .pipe(
         catchError((err) => {
           this.moviesListsStore.setError(err);
@@ -68,9 +70,10 @@ export class MoviesListsService {
       });
   }
 
-  update(id, moviesList: Partial<MoviesList>) {
+  update(id: string, moviesList: Partial<MoviesList>) {
     this.moviesListsStore.setLoading(true);
-    from(this.moviesListsCollection.doc(id).update(moviesList)).subscribe(() => {
+    const listToUpdate = doc(this.firestore, `movies-lists/${id}`);
+    from(updateDoc(listToUpdate, moviesList)).subscribe(() => {
       this.moviesListsStore.setLoading(false);
       this.toast.success('List updated!', {
         duration: 3000
@@ -83,7 +86,10 @@ export class MoviesListsService {
     this.moviesService
       .deleteMoviesInList(id)
       .pipe(
-        switchMap(() => this.moviesListsCollection.doc(id).delete()),
+        switchMap(() => {
+          const listToDelete = doc(this.firestore, `movies-lists`, id);
+          return deleteDoc(listToDelete);
+        }),
         finalize(() => {
           this.moviesListsStore.setLoading(false);
           this.toast.success('List deleted!', {
@@ -115,11 +121,21 @@ export class MoviesListsService {
     this.sessionSubscription.unsubscribe();
   }
 
-  private setupMoviesListsCollection(firestoreService: AngularFirestore, userId: string): void {
-    this.moviesListsCollection = firestoreService.collection(
-      `movies-lists`,
-      /* istanbul ignore next */
-      (ref) => ref.where('userId', '==', userId)
-    );
+  private setupMoviesListsCollection(userId: string): Observable<MoviesList[]> {
+    const moviesListsCollection = collection(
+      this.firestore,
+      `movies-lists`
+    ).withConverter<MoviesList>({
+      fromFirestore: (snapshot) => {
+        const moviesList = snapshot.data();
+        const { id } = snapshot;
+        return { id, ...moviesList } as MoviesList;
+      },
+      // TODO unused can we make implicit?
+      toFirestore: (it) => it
+    });
+    const userMoviesListsQuery = query(moviesListsCollection, where('userId', '==', userId));
+
+    return collectionData(userMoviesListsQuery);
   }
 }

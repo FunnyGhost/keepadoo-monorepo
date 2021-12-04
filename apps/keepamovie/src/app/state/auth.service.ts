@@ -5,7 +5,14 @@ import { User } from './models/user';
 import { SessionQuery } from './session.query';
 import { SessionStore } from './session.store';
 import { Subscription } from 'rxjs';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import {
+  Auth,
+  authState,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  User as FirebaseUser
+} from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -16,15 +23,15 @@ export class AuthService {
   constructor(
     private sessionStore: SessionStore,
     private query: SessionQuery,
-    private afAuth: AngularFireAuth,
+    private auth: Auth,
     private router: Router
   ) {}
 
   public initialize(): void {
     this.sessionStore.setLoading(true);
-    this.authSubscription = this.afAuth.authState
+    this.authSubscription = authState(this.auth)
       .pipe(
-        map((firebaseUser) => {
+        map((firebaseUser: FirebaseUser) => {
           if (firebaseUser) {
             const user: User = {
               displayName: firebaseUser.displayName,
@@ -40,7 +47,7 @@ export class AuthService {
         if (data) {
           this.sessionStore.login(data);
           const redirectUrl = this.query.redirectUrl();
-          this.router.navigateByUrl(redirectUrl);
+          this.router.navigateByUrl(redirectUrl).then();
         } else {
           this.sessionStore.logout();
         }
@@ -52,7 +59,7 @@ export class AuthService {
     this.sessionStore.setLoading(true);
 
     try {
-      await this.afAuth.signInWithEmailAndPassword(email, password);
+      await signInWithEmailAndPassword(this.auth, email, password);
     } catch (error) {
       this.sessionStore.setError(error.message);
     }
@@ -63,7 +70,7 @@ export class AuthService {
   async signUp(email, password) {
     this.sessionStore.setLoading(true);
     try {
-      await this.afAuth.createUserWithEmailAndPassword(email, password);
+      await createUserWithEmailAndPassword(this.auth, email, password);
     } catch (error) {
       this.sessionStore.setError(error.message);
     }
@@ -72,7 +79,7 @@ export class AuthService {
   }
 
   async signOut() {
-    await this.afAuth.signOut();
+    await signOut(this.auth);
     return this.router.navigate(['/login']);
   }
 
