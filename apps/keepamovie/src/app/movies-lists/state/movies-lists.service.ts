@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { EMPTY, from, Subscription } from 'rxjs';
 import { SessionQuery } from '../../state/session.query';
 import { MovieSearchResult } from '../movie-search/state/models/movie-search-results';
@@ -9,6 +8,7 @@ import { MoviesListsQuery } from './movies-lists.query';
 import { MoviesListsStore } from './movies-lists.store';
 import { HotToastService } from '@ngneat/hot-toast';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class MoviesListsService {

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { combineLatest, from, Observable, of, Subscription } from 'rxjs';
 import { map, mergeMap, reduce, switchMap, take } from 'rxjs/operators';
 import { SessionQuery } from '../../../state/session.query';
@@ -9,6 +8,7 @@ import { MoviesListsQuery } from '../../state/movies-lists.query';
 import { Movie } from './models/movie';
 import { MoviesStore } from './movies.store';
 import { HotToastService } from '@ngneat/hot-toast';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class MoviesService {
@@ -51,7 +51,7 @@ export class MoviesService {
         (ref) => ref.where('listId', '==', listId).orderBy('added_on', 'desc')
       )
       .valueChanges({ idField: 'key' })
-      .pipe(map((data) => (data as unknown) as Movie[]));
+      .pipe(map((data) => data as unknown as Movie[]));
   }
 
   public addMovieToList(listId: string, movie: MovieSearchResult) {
