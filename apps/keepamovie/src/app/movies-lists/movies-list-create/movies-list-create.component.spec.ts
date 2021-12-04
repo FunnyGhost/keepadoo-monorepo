@@ -5,10 +5,10 @@ import { of, ReplaySubject } from 'rxjs';
 import { MoviesListsQuery } from '../state/movies-lists.query';
 import { MoviesListsService } from '../state/movies-lists.service';
 import { MoviesListCreateComponent } from './movies-list-create.component';
-import { childComponents, getElementForTest } from '@test-utilities/test-functions';
 import { MockComponent } from 'ng-mocks';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { SvgIconComponent } from '@ngneat/svg-icon';
+import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
 
 const errorStream = new ReplaySubject<string>(1);
 const loadingStream = new ReplaySubject<boolean>(1);

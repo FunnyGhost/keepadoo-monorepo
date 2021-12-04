@@ -1,12 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { of, ReplaySubject } from 'rxjs';
-import {
-  testMovies,
-  testMovieSearchResults,
-  testMoviesLists,
-  testUser
-} from '@test-utilities/test-objects';
 import { SessionQuery } from '../../../state/session.query';
 import { MoviesList } from '../../state/models/movies-list';
 import { MoviesListsQuery } from '../../state/movies-lists.query';
@@ -14,6 +8,12 @@ import { Movie } from './models/movie';
 import { MoviesService } from './movies.service';
 import { MoviesStore } from './movies.store';
 import { HotToastService } from '@ngneat/hot-toast';
+import {
+  testMovies,
+  testMovieSearchResults,
+  testMoviesLists,
+  testUser
+} from '../../../../test-utilities/test-objects';
 
 const firestoreMock = {
   collection() {

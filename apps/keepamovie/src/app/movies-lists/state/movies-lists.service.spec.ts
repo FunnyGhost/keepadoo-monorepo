@@ -1,7 +1,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { of, ReplaySubject } from 'rxjs';
-import { testMovieSearchResults, testMoviesLists, testUser } from '@test-utilities/test-objects';
 import { SessionQuery } from '../../state/session.query';
 import { MoviesService } from '../movies/state/movies.service';
 import { MoviesList } from './models/movies-list';
@@ -9,6 +8,11 @@ import { MoviesListsQuery } from './movies-lists.query';
 import { MoviesListsService } from './movies-lists.service';
 import { MoviesListsStore } from './movies-lists.store';
 import { HotToastService } from '@ngneat/hot-toast';
+import {
+  testMovieSearchResults,
+  testMoviesLists,
+  testUser
+} from '../../../test-utilities/test-objects';
 
 const docObject = {
   set: jest.fn(),

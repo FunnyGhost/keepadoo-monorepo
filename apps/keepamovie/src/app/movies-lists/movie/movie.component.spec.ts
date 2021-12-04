@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { testMovies } from '@test-utilities/test-objects';
 import { MovieComponent } from './movie.component';
-import { childComponents, getElementForTest } from '@test-utilities/test-functions';
 import { MockComponent } from 'ng-mocks';
 import { RatingComponent } from '../../shared/rating/rating/rating.component';
 import { SvgIconComponent } from '@ngneat/svg-icon';
+import { testMovies } from '../../../test-utilities/test-objects';
+import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
 
 describe('MovieComponent', () => {
   const movieToUse = testMovies[0];

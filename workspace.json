@@ -1,26 +1,51 @@
 {
   "version": 2,
-  "cli": {
-    "defaultCollection": "@nrwl/angular"
-  },
-  "defaultProject": "keepamovie",
-  "generators": {
-    "@nrwl/angular:application": {
-      "style": "css",
-      "linter": "eslint",
-      "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
-    },
-    "@nrwl/angular:library": {
-      "style": "css",
-      "linter": "eslint",
-      "unitTestRunner": "jest"
-    },
-    "@nrwl/angular:component": {
-      "style": "css"
-    }
-  },
   "projects": {
+    "functions": {
+      "root": "apps/functions",
+      "sourceRoot": "apps/functions/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/functions",
+            "main": "apps/functions/src/main.ts",
+            "tsConfig": "apps/functions/tsconfig.app.json"
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "functions:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/functions/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/functions"],
+          "options": {
+            "jestConfig": "apps/functions/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
     "keepamovie": {
       "projectType": "application",
       "root": "apps/keepamovie",
@@ -28,7 +53,7 @@
       "prefix": "keepadoo",
       "targets": {
         "build": {
-          "executor": "@angular-builders/custom-webpack:browser",
+          "executor": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/apps/keepamovie",
             "index": "apps/keepamovie/src/index.html",
@@ -36,17 +61,9 @@
             "polyfills": "apps/keepamovie/src/polyfills.ts",
             "tsConfig": "apps/keepamovie/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/keepamovie/src/favicon.ico",
-              "apps/keepamovie/src/assets"
-            ],
-            "styles": [
-              "apps/keepamovie/src/styles.css"
-            ],
-            "scripts": [],
-            "customWebpackConfig": {
-              "path": "webpack.config.js"
-            }
+            "assets": ["apps/keepamovie/src/favicon.ico", "apps/keepamovie/src/assets"],
+            "styles": ["apps/keepamovie/src/styles.css"],
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -79,7 +96,7 @@
           }
         },
         "serve": {
-          "executor": "@angular-builders/custom-webpack:dev-server",
+          "executor": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "keepamovie:build"
           },
@@ -98,23 +115,20 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/keepamovie/src/**/*.ts",
-              "apps/keepamovie/src/**/*.html"
-            ]
-          }
+            "lintFilePatterns": ["apps/keepamovie/src/**/*.ts", "apps/keepamovie/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/keepamovie"
-          ],
+          "outputs": ["coverage/apps/keepamovie"],
           "options": {
             "jestConfig": "apps/keepamovie/jest.config.js",
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "keepamovie-e2e": {
       "root": "apps/keepamovie-e2e",
@@ -137,61 +151,13 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/keepamovie-e2e/**/*.{js,ts}"
-            ]
-          }
-        }
-      }
-    },
-    "functions": {
-      "root": "apps/functions",
-      "sourceRoot": "apps/functions/src",
-      "projectType": "application",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
-          "options": {
-            "outputPath": "dist/apps/functions",
-            "main": "apps/functions/src/main.ts",
-            "tsConfig": "apps/functions/tsconfig.app.json"
+            "lintFilePatterns": ["apps/keepamovie-e2e/**/*.{js,ts}"]
           },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "functions:build"
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "apps/functions/**/*.ts"
-            ]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/functions"
-          ],
-          "options": {
-            "jestConfig": "apps/functions/jest.config.js",
-            "passWithNoTests": true
-          }
+          "outputs": ["{options.outputFile}"]
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["keepamovie"]
     }
   }
 }

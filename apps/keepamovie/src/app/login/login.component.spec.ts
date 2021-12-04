@@ -7,13 +7,13 @@ import { SessionQuery } from '../state/session.query';
 import { LoginComponent } from './login.component';
 import { MockComponent } from 'ng-mocks';
 import { RouterLinkWithHref } from '@angular/router';
+import { SvgIconComponent } from '@ngneat/svg-icon';
+import { ButtonComponent } from '../shared/button/button.component';
 import {
   childComponents,
   getElementForTest,
   getElementsForTest
-} from '@test-utilities/test-functions';
-import { SvgIconComponent } from '@ngneat/svg-icon';
-import { ButtonComponent } from '../shared/button/button.component';
+} from '../../test-utilities/test-functions';
 
 const queryMock = {
   error: new BehaviorSubject<string | null>(null),

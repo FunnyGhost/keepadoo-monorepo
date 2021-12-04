@@ -4,15 +4,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockComponent } from 'ng-mocks';
 import { ReplaySubject } from 'rxjs';
-import { testMovieSearchResults } from '@test-utilities/test-objects';
 import { MovieSearchResultComponent } from '../movie-search-result/movie-search-result.component';
 import { MoviesListsService } from '../state/movies-lists.service';
 import { MovieSearchComponent } from './movie-search.component';
 import { MovieSearchQuery } from './state/movie-search.query';
 import { MovieSearchService } from './state/movie-search.service';
 import { MovieSearchResult } from './state/models/movie-search-results';
-import { childComponents, getElementForTest } from '@test-utilities/test-functions';
 import { SvgIconComponent } from '@ngneat/svg-icon';
+import { childComponents, getElementForTest } from '../../../test-utilities/test-functions';
+import { testMovieSearchResults } from '../../../test-utilities/test-objects';
 
 describe('MovieSearchComponent', () => {
   let component: MovieSearchComponent;
